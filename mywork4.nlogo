@@ -6,18 +6,18 @@ turtles-own [lu_t ]
 patches-own [lu_p one_p two_p three_p four_p five_p six_p sevenone_p seventwo_p eight_p suitab_p ]
 to setup
   clear-all
-  set lu gis:load-dataset "E:/NetLogo 5.2.0/extrasexamples++++++/mywork/lu.asc"
+  set lu gis:load-dataset "C:/GITHUB/Landuse Model Netlogo/lu.asc"
   ;gis:set-world-envelope gis:envelope-of lu 
-  set one gis:load-dataset "E:/NetLogo 5.2.0/extrasexamples++++++/mywork/relfy_road.asc"
-  set two gis:load-dataset "E:/NetLogo 5.2.0/extrasexamples++++++/mywork/reclafy_rail.asc"
-  set three gis:load-dataset "E:/NetLogo 5.2.0/extrasexamples++++++/mywork/wa_st_recl.asc"
-  set four gis:load-dataset "E:/NetLogo 5.2.0/extrasexamples++++++/mywork/prox_res_ras.asc"
-  set five gis:load-dataset "E:/NetLogo 5.2.0/extrasexamples++++++/mywork/mining_area.asc"
-  set six gis:load-dataset "E:/NetLogo 5.2.0/extrasexamples++++++/mywork/cid_recl.asc"
-  set sevenone gis:load-dataset "E:/NetLogo 5.2.0/extrasexamples++++++/mywork/reclass_newc21.asc"
-  set seventwo gis:load-dataset "E:/NetLogo 5.2.0/extrasexamples++++++/mywork/residential_recl.asc"
-  set eight gis:load-dataset "E:/NetLogo 5.2.0/extrasexamples++++++/mywork/agri_un_recl.asc"
-  set nine gis:load-dataset "E:/NetLogo 5.2.0/extrasexamples++++++/mywork/ind_suitab_f.asc"
+  set one gis:load-dataset "C:/GITHUB/Landuse Model Netlogo/relfy_road.asc"
+  set two gis:load-dataset "C:/GITHUB/Landuse Model Netlogo/reclafy_rail.asc"
+  set three gis:load-dataset "C:/GITHUB/Landuse Model Netlogo/wa_st_recl.asc"
+  set four gis:load-dataset "C:/GITHUB/Landuse Model Netlogo/prox_res_ras.asc"
+  set five gis:load-dataset "C:/GITHUB/Landuse Model Netlogo/mining_area.asc"
+  set six gis:load-dataset "C:/GITHUB/Landuse Model Netlogo/cid_recl.asc"
+  set sevenone gis:load-dataset "C:/GITHUB/Landuse Model Netlogo/reclass_newc21.asc"
+  set seventwo gis:load-dataset "C:/GITHUB/Landuse Model Netlogo/residential_recl.asc"
+  set eight gis:load-dataset "C:/GITHUB/Landuse Model Netlogo/agri_un_recl.asc"
+  set nine gis:load-dataset "C:/GITHUB/Landuse Model Netlogo/ind_suitab_f.asc"
   
   set suitab gis:create-raster gis:width-of lu gis:height-of lu gis:envelope-of lu
   set five gis:create-raster gis:width-of lu gis:height-of lu gis:envelope-of lu            ; five dataset is wider and lengthier than other maps, possibility is that the resolution failed to match other datasets, so to make it equal we make this command.
@@ -35,18 +35,18 @@ to setup
                                                 (gis:envelope-of eight)
                                                 (gis:envelope-of nine))
  
-  gis:paint lu 255 
+  gis:paint lu 150  ;to color the raster or the shapefile.
   
 ;  set a gis:width-of one
 ;  print a
 end
 
 
-to classify
-  ;ask turtles [
-   ; set lu_t gis:raster-sample lu self
-;  ]
-  gis:apply-raster lu lu_p 
+to classify  ; to color the landuses according to the land use.
+  ask turtles [
+    set lu_t gis:raster-sample lu self ;variable lu_t will store the raster data as it reads from lu
+  ]
+  gis:apply-raster lu lu_p ; convert raster data into patch variable
 ;  ask patches [
 ;
 ;  ifelse (lu_p = 1) or (lu_p = 3) [ set pcolor yellow ] [      ;; residential
@@ -65,11 +65,7 @@ end
    
  
 
-to xpand
-  set pcolor green
-end
-
-to classify1
+to classify1 ;just to test the assignment of shapes
   
   ask patches [
     sprout 1]
@@ -81,26 +77,20 @@ to classify1
 end
 
 to relfy_road
-  ;set one gis:load-dataset "E:/NetLogo 5.2.0/extrasexamples++++++/mywork/relfy_road.asc"
-  gis:paint one 199 
-  ;gis:set-world-envelope gis:envelope-of lu
-  ;set one gis:create-raster gis:width-of lu gis:height-of lu gis:envelope-of lu
+ 
+  gis:paint one 199 ; to paint one [relfy_road] at 199
+
   gis:apply-raster one one_p 
   ask patches [
-  ifelse (one_p <= 0) or (one_p >= 0)
+  ifelse (one_p <= 0) or (one_p >= 0)  ; to check if the NaN value is there.
  [ set pcolor blue ]
- [ set pcolor red ]
-
-  ;ask patches [
-   ; if (one_p = 1) or (one_p = 2) or (one_p = 3)   [set pcolor yellow ]
-    ;if (one_p = 4) or (one_p = 5) or (one_p = 6) or (one_p = 7) or (one_p = 8) [set pcolor blue ]
-   ]
-  
+ [ set pcolor red ]  ; keep an eye of ifelse statements.
+  ]
 end
+
 to reclafy_rail
-  ;set two gis:load-dataset "E:/NetLogo 5.2.0/extrasexamples++++++/mywork/reclafy_rail.asc"
-  gis:paint two 199 
-  ;gis:set-world-envelope gis:envelope-of lu    
+  
+  gis:paint two 199     
   gis:apply-raster two two_p 
   
   ask patches [
@@ -111,9 +101,9 @@ to reclafy_rail
 end
 
 to wa_st_recl
-  ;set three gis:load-dataset "E:/NetLogo 5.2.0/extrasexamples++++++/mywork/wa_st_recl.asc"
+  
   gis:paint three 199 
- ; gis:set-world-envelope gis:envelope-of lu    
+   
   
   gis:apply-raster three three_p 
   
@@ -124,9 +114,9 @@ to wa_st_recl
   
 end
 to prox_res_ras
-  ;set four gis:load-dataset "E:/NetLogo 5.2.0/extrasexamples++++++/mywork/prox_res_ras.asc"
+ 
   gis:paint four 199 
- ; gis:set-world-envelope gis:envelope-of lu  
+   
     
  gis:apply-raster four four_p 
 ask patches [
@@ -136,9 +126,9 @@ ask patches [
 ]
 end
 to mining_area
-  ;set five gis:load-dataset "E:/NetLogo 5.2.0/extrasexamples++++++/mywork/mining_area.asc"
+
   gis:paint five 255 
-  ;gis:set-world-envelope gis:envelope-of lu    
+   
   
    gis:apply-raster five five_p 
 ask patches [
@@ -149,9 +139,9 @@ ask patches [
   
 end
 to cid_recl
- ; set six gis:load-dataset "E:/NetLogo 5.2.0/extrasexamples++++++/mywork/cid_recl.asc"
+
   gis:paint six 199 
- ; gis:set-world-envelope gis:envelope-of lu    
+   
   
     gis:apply-raster six six_p 
 ask patches [
@@ -163,9 +153,9 @@ ask patches [
   
 end
 to reclass_newc21
-  ;set sevenone gis:load-dataset "E:/NetLogo 5.2.0/extrasexamples++++++/mywork/reclass_newc21.asc"
+  
   gis:paint sevenone 199 
-  ;gis:set-world-envelope gis:envelope-of lu  
+   
   gis:apply-raster sevenone sevenone_p 
   
   ask patches [
@@ -176,9 +166,9 @@ to reclass_newc21
     
 end
 to residential_recl
- ; set seventwo gis:load-dataset "E:/NetLogo 5.2.0/extrasexamples++++++/mywork/residential_recl.asc"
+
   gis:paint seventwo 199 
-  ;gis:set-world-envelope gis:envelope-of lu    
+   
   
    gis:apply-raster seventwo seventwo_p 
 ask patches [
@@ -213,7 +203,7 @@ end
 to suitability
   
   
-  set suitab gis:create-raster gis:width-of sevenone gis:height-of one gis:envelope-of sevenone
+  set suitab gis:create-raster gis:width-of sevenone gis:height-of one gis:envelope-of sevenone ; with actual command goes as gis:create-rater width height envelope
   
   ;gis:apply-raster suitab suitab_p
   
@@ -229,7 +219,7 @@ repeat (gis:width-of one)
   repeat (gis:height-of sevenone)
   
   [ ;ask patches
-    let go gis:raster-value one x y
+    let go gis:raster-value one x y  ; gis:raster-value RasterDataset x y [reports the value of the given raster dataset in the given cell]
     let gt gis:raster-value two x y
     let gth gis:raster-value three x y
     let gf gis:raster-value four x y
@@ -244,17 +234,18 @@ repeat (gis:width-of one)
     ;set s1 s1 + (go + gt + gth + gf + gfi + gs  + ge) ;gseo + gset
     set s1 s2
     
-    gis:set-raster-value suitab x y s1
+    gis:set-raster-value suitab x y s1 ; sets the value of given raster dataset at the given cell to a new value
+    ; gis:set-raster-value RasterDataset x y value
      
   set y y + 1 ] 
  set x x + 1 ]
  
 ;gis:apply-raster suitab suitab_p 
 
-gis:paint suitab 255
+gis:paint suitab 150
 
 ;ask patches [
-;  ifelse suitab_p > 0.0536 ;and (suitab_p < 0.1)
+;  ifelse suitab_p > 0.0536 and (suitab_p < 0.1)
 ; [ set pcolor blue ]
 ; [ set pcolor red ] ]
 
@@ -617,23 +608,6 @@ NIL
 1
 
 BUTTON
-14
-203
-95
-236
-Land use
-gis:paint lu 200
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
 15
 243
 104
@@ -863,7 +837,7 @@ num-centroids
 num-centroids
 0
 200
-66
+9
 1
 1
 NIL
@@ -910,7 +884,7 @@ BUTTON
 393
 NIL
 go1
-NIL
+T
 1
 T
 OBSERVER
