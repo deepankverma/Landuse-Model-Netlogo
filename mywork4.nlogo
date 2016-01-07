@@ -239,138 +239,16 @@ repeat (gis:width-of one)
      
   set y y + 1 ] 
  set x x + 1 ]
- 
-;gis:apply-raster suitab suitab_p 
 
 gis:paint suitab 150
 
-;ask patches [
-;  ifelse suitab_p > 0.0536 and (suitab_p < 0.1)
-; [ set pcolor blue ]
-; [ set pcolor red ] ]
-
-;ask patches [
-;  ifelse (suitab_p = )  [set pcolor red ]
-;    [set pcolor  blue ]
-
-;]
 end
 
-to land_suitability
-  gis:apply-raster suitab suitab_p 
- 
-;; ask patches [
-;;  ifelse (suitab_p > 0 )  [set pcolor red ]
-;;    [set pcolor  blue ]
-;;
-;;]
-; 
- 
-; ask patches [
-;    sprout 1]
-;  
-;  ask turtles[
-;  if suitab_p > 6 [ set shape "square" set color red ]
-;  ;if lu_p = 26  [set shape "circle" set color yellow]
-;  ]
-  
-  end
-;to resampling
-;  gis:set-sampling-method lu "BILINEAR"
-;;  set lu1 gis:create-raster  gis:width-of lu gis:height-of lu  gis:envelope-of lu
-;;  gis:resample lu1 gis:envelope-of lu gis:width-of lu gis:height-of lu 
-;  gis:paint lu 1
-;end
-
-to setup1
-  ask patches [sprout-data-points 1]
-  set-default-shape data-points "circle"
-  ask turtles [
- 
- ifelse (lu_p <= 0) or (lu_p >= 0)
- [ set color blue ]
- [ set color red ]]
-show count turtles with [lu_p = 1]
-  ask turtles
- [ifelse (lu_p = 1) or (color = "blue") 
- [set color blue]              ;never use lu_p or any patch variable directly, ask patches or turtles.
- [die]]
- 
- set-default-shape centroids "x"
- reset-centroids
- 
-end
-
-to reset-centroids
-  set any-centroids-moved? true
-  ask data-points [ set color red ]
-  
- let colors base-colors
-;let colors  one-of [ red green blue yellow ]
-  ask centroids [die]
-  create-centroids num-centroids [  ;num-centroids is a variable
-    move-to one-of data-points ;with [data-points = 1]
-    set size 10
-    set color random 200;last colors + 1
-    set colors random 200 ;butlast colors
-  ]
-  clear-all-plots
-  reset-ticks
-end
-
-to go1
-  if not any-centroids-moved? [stop]
-  set any-centroids-moved? false
-  assign-clusters
-  update-clusters
-  tick
-end  
-to assign-clusters
-  ask data-points [set color [color] of closest-centroid - 2]  
-end
-to update-clusters
-  let movement-threshold 0.1
-  ask centroids [
-    let my-points data-points with [ shade-of? color [ color ] of myself ]
-    if any? my-points [ 
-      let new-xcor mean [ xcor ] of my-points
-      let new-ycor mean [ ycor ] of my-points
-      if distancexy new-xcor new-ycor > movement-threshold [
-        set any-centroids-moved? true
-      ]
-      setxy new-xcor new-ycor
-    ]
-  ]
-  update-plots
-end
-to-report closest-centroid
-  report min-one-of centroids [ distance myself ]
-end
-  to-report square-deviation
-  report sum [ (distance myself) ^ 2 ] of data-points with [ closest-centroid = myself ]
-end
-  
-  
-  
-  
-  
-  
-  
   ;;;;;;;Final outcome;;;;;
   ;globals [ x y ]
 
 
-to pop_proj
-  if (chooser = "linear")
-  [linear_cal]
-  if (chooser = "exponential")
-  [exponential_cal]
-;  if(chooser = "geometric")
-;  [geometric_cal]
-  if(chooser = "logistics")
-  [logarithmic_cal]
-  
-end
+
 
 to setup2
   reset-ticks
@@ -397,137 +275,6 @@ ask patches [
 end
 
 
-to linear_cal
-  let year_index 13
-  let year_indexprev 12
-  tick-advance 12
-
- 
- 
- 
-  repeat 10
- 
-  
-  [ 
-   let z (28961 * year_index - 91969) 
-   let z1 (28961 * year_indexprev - 91969)
-   
-  let new_population z
-  set year_index year_index + 1
-  set year_indexprev year_indexprev + 1
-  
- ; print new_population
-  
-  let old_population z1
-  tick
-  let z2 (z - z1)
-  let delta_population z2
-  let ratio (delta_population / patch_density)
-  set residential_patchesneeded ratio                                                       
-  print residential_patchesneeded
-  
- ;ask patches [                                                                             ; to ask how many residential patches are present
-    
-    ;show count patches with [ (lu_p = 1) or (lu_p = 3)]
-    
-    set totalres_patches count patches with [(lu_p = 1) or (lu_p = 3)]
-  
-  print totalres_patches
-  
- 
- 
- let patch_density1 (old_population / totalres_patches)
- 
- ;print patch_density1
- 
- ;]
-
- set update_res_count totalres_patches
- if (update_res_count <= (residential_patchesneeded + totalres_patches))
- 
- 
- [residential_new]
- 
- ;print update_res_count
- 
- ]
-   
-  
-end
-
-
-to residential_new 
-  
-;  ask patches 
-;  
-;  [ set neigh count neighbors with  [(lu_p = 1) or (lu_p = 3)]
-  
-  ask  patches with [ (lu_p = 29)]
-  
-  [  
-      
-  if (suitab_p > 6)
-  [ 
-  
-  set lu_p  1
-  set pcolor yellow
- 
- ]
-  
-  
-  set update_res_count update_res_count + 1
-  if update_res_count > residential_patchesneeded + totalres_patches
-  [ stop ]
-
-  
-  print update_res_count
-    
-;  set update_res_count update_res_count + 1
-;    
-;  print update_res_count
-;  ]
-  ]
- ; ]
-  end
-
-
-  
-  
-   
-to exponential_cal
-  let x 12
-  tick-advance 12
-  repeat 10
-  
-  [ 
-   let z (3535.1  * e ^ ( 0.3813 *  x)) 
-  let y z
-  set x x + 1
-  
-  print y
-  tick
- 
- ]
-   
-  
-end
-
-to logarithmic_cal
-  let x 12
-  tick-advance 12
-  repeat 10
-  
-  [ 
-  ; let z (110961 [ ln *  x ] - 88542 ) 
- ; let y z
-  set x x + 1
-  
-  ;print y
-  tick
- ]
-   
-  
-end
 @#$#@#$#@
 GRAPHICS-WINDOW
 458
@@ -608,299 +355,12 @@ NIL
 1
 
 BUTTON
-15
-243
-104
-276
-NIL
-relfy_road
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-16
-281
-109
-314
-NIL
-reclafy_rail
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-17
-318
-109
-351
-NIL
-wa_st_recl
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-19
-355
-124
-388
-NIL
-prox_res_ras
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-20
-395
-118
-428
-NIL
-mining_area
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-21
-435
-94
-468
-NIL
-cid_recl
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-21
-474
-140
-507
-NIL
-reclass_newc21
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-21
-513
-135
-546
-NIL
-residential_recl
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-22
-551
-138
-584
-NIL
-agri_un_recl
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
 107
 46
 190
 79
 NIL
 suitability
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-112
-104
-212
-137
-NIL
-suitab_ind_f
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-106
-161
-219
-194
-NIL
-land_suitability
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-108
-201
-181
-234
-NIL
-setup1
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-SLIDER
-107
-243
-279
-276
-num-centroids
-num-centroids
-0
-200
-9
-1
-1
-NIL
-HORIZONTAL
-
-BUTTON
-116
-283
-229
-316
-NIL
-assign-clusters
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-117
-322
-235
-355
-NIL
-update-clusters
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-128
-360
-191
-393
-NIL
-go1
-T
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-122
-398
-238
-431
-NIL
-reset-centroids
 NIL
 1
 T
@@ -919,7 +379,7 @@ CHOOSER
 chooser
 chooser
 "linear" "exponential" "logarithmic"
-0
+2
 
 INPUTBOX
 310
@@ -931,6 +391,23 @@ patch_density
 1
 0
 Number
+
+BUTTON
+206
+245
+326
+278
+NIL
+land_use_colors
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
