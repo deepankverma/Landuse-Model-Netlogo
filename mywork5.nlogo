@@ -1,9 +1,9 @@
 extensions [gis]
 breed [data-points data-point]
 breed [centroids centroid]
-globals [lu lu1 one two three four five six seven seventwo eight nine suitab s1 a i j k l n any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded] 
+globals [lu lu1 one two three four five six seven seventwo eight nine ten eleven twelve suitab s1 a i j k l n any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded] 
 turtles-own [lu_t ]
-patches-own [lu_p one_p two_p three_p four_p five_p six_p sevenone_p seventwo_p eight_p suitab_p ]
+patches-own [lu_p one_p two_p three_p four_p five_p six_p sevenone_p seventwo_p eight_p ten_p eleven_p twelve_p suitab_p ]
 to setup
   clear-all
   set lu gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/reforestas.asc"
@@ -17,9 +17,15 @@ to setup
   set seven gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/reensenstias.asc"
   set eight gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/reslopeas.asc"
   set nine gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/refloodhas.asc"
+  set ten gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/mergebarrasas.asc"
+  set eleven gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/wardmapas.asc"
+  set twelve gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/croplandas.asc"
 
   
   set suitab gis:create-raster gis:width-of lu gis:height-of lu gis:envelope-of lu
+  
+;set eleven gis:create-raster gis:width-of lu gis:height-of lu gis:envelope-of lu
+ ;set twelve gis:create-raster gis:width-of lu gis:height-of lu gis:envelope-of lu
  
   
   
@@ -32,9 +38,12 @@ to setup
                                                 (gis:envelope-of six)
                                                 (gis:envelope-of seven)
                                                 (gis:envelope-of eight)
-                                                (gis:envelope-of nine))
+                                                (gis:envelope-of nine)
+                                                (gis:envelope-of ten)
+                                                (gis:envelope-of eleven)
+                                                (gis:envelope-of twelve))
  
-  gis:paint nine 150  ;to color the raster or the shapefile.
+  gis:paint twelve 150  ;to color the raster or the shapefile.
   
 ;  set a gis:width-of one
 ;  print a
@@ -43,9 +52,9 @@ end
 
 to classify  ; to color the landuses according to the land use.
   ask turtles [
-    set lu_t gis:raster-sample one self ;variable lu_t will store the raster data as it reads from lu
+    set lu_t gis:raster-sample twelve self ;variable lu_t will store the raster data as it reads from lu
   ]
-  gis:apply-raster one one_p ; convert raster data into patch variable
+  gis:apply-raster twelve twelve_p ; convert raster data into patch variable
 
 end
    
@@ -57,134 +66,12 @@ to classify1 ;just to test the assignment of shapes
     sprout 1]
   
   ask turtles[
-  if lu_p = 1 [ set shape "square" set color black ]
-  if lu_p = 26  [set shape "circle" set color yellow]
+  set shape "circle" set color random 255
+  if twelve_p = 0 [ set shape "circle" set color red ]
+  if eleven_p = 2  [set shape "circle" set color yellow]
   ]
 end
 
-to relfy_road
- 
-  gis:paint one 199 ; to paint one [relfy_road] at 199
-
-  gis:apply-raster one one_p 
-  ask patches [
-  ifelse (one_p <= 0) or (one_p >= 0)  ; to check if the NaN value is there.
- [ set pcolor blue ]
- [ set pcolor red ]  ; keep an eye of ifelse statements.
-  ]
-end
-
-to reclafy_rail
-  
-  gis:paint two 199     
-  gis:apply-raster two two_p 
-  
-  ask patches [
-    if (two_p = 1) or (two_p = 2)   [set pcolor yellow ]
-    if (two_p = 4) or (two_p = 5) [set pcolor blue ]
-  ]
-  
-end
-
-to wa_st_recl
-  
-  gis:paint three 199 
-   
-  
-  gis:apply-raster three three_p 
-  
-  ask patches [
-    if (three_p = 1) or (three_p = 2)   [set pcolor yellow ]
-    if (three_p = 4) or (three_p = 5) [set pcolor blue ]
-  ]
-  
-end
-to prox_res_ras
- 
-  gis:paint four 199 
-   
-    
- gis:apply-raster four four_p 
-ask patches [
-  ifelse (four_p <= 0) or (four_p >= 0)
- [ set pcolor blue ]
- [ set pcolor red ]  
-]
-end
-to mining_area
-
-  gis:paint five 255 
-   
-  
-   gis:apply-raster five five_p 
-ask patches [
-  ifelse (five_p <= 0) or (five_p >= 0)
- [ set pcolor blue ]
- [ set pcolor red ]  
-]
-  
-end
-to cid_recl
-
-  gis:paint six 199 
-   
-  
-    gis:apply-raster six six_p 
-ask patches [
-  ifelse (six_p <= 0) or (six_p >= 0)
- [ set pcolor blue ]
- [ set pcolor red ]  
-]
-  
-  
-end
-;to reclass_newc21
-;  
-;  gis:paint sevenone 199 
-;   
-;  gis:apply-raster sevenone sevenone_p 
-;  
-;  ask patches [
-;    if (sevenone_p = 1) or (sevenone_p = 2)   [set pcolor yellow ]
-;    if (sevenone_p = 4) or (sevenone_p = 5) [set pcolor blue ]
-;  ]
-;  
-;    
-;end
-to residential_recl
-
-  gis:paint seventwo 199 
-   
-  
-   gis:apply-raster seventwo seventwo_p 
-ask patches [
-  ifelse (seventwo_p <= 0) or (seventwo_p >= 0)
- [ set pcolor blue ]
- [ set pcolor red ]
-  
- ; ask patches [
-  ;  if (seventwo_p = 1) or (seventwo_p = 2)   [set pcolor yellow ]
-   ; if (seventwo_p = 4) or (seventwo_p = 5) [set pcolor blue ]
-  ]
-  
-  
-end
-to agri_un_recl
-  ;set eight gis:load-dataset "E:/NetLogo 5.2.0/extrasexamples++++++/mywork/agri_un_recl.asc"
-  gis:paint eight 199 
- ;gis:set-world-envelope gis:envelope-of lu
-     gis:apply-raster eight eight_p 
-  
-  ask patches [
-    if (eight_p = 1) or (eight_p = 2)   [set pcolor yellow ]
-    if (eight_p = 4) or (eight_p = 5) [set pcolor blue ]
-  ]
-  
-end
-
-to suitab_ind_f
-  gis:paint nine 1
-end
 
 to suitability
   
@@ -263,10 +150,10 @@ end
 GRAPHICS-WINDOW
 458
 10
-1478
-851
-50
-40
+2478
+2051
+100
+100
 10.0
 1
 2
@@ -277,10 +164,10 @@ GRAPHICS-WINDOW
 0
 0
 1
--50
-50
--40
-40
+-100
+100
+-100
+100
 0
 0
 1
@@ -739,6 +626,12 @@ Polygon -7500403 true true 30 75 75 30 270 225 225 270
 NetLogo 5.2.0
 @#$#@#$#@
 @#$#@#$#@
+1.0 
+    org.nlogo.sdm.gui.AggregateDrawing 2 
+        org.nlogo.sdm.gui.StockFigure "attributes" "attributes" 1 "FillColor" "Color" 225 225 182 64 123 60 40 
+            org.nlogo.sdm.gui.WrappedStock "" "" 0   
+        org.nlogo.sdm.gui.ConverterFigure "attributes" "attributes" 1 "FillColor" "Color" 130 188 183 315 396 50 50 
+            org.nlogo.sdm.gui.WrappedConverter "" ""
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
@@ -754,5 +647,5 @@ Line -7500403 true 150 150 90 180
 Line -7500403 true 150 150 210 180
 
 @#$#@#$#@
-0
+1
 @#$#@#$#@
