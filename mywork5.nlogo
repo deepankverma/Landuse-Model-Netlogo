@@ -1,14 +1,16 @@
+extensions [csv]
 extensions [gis]
+;extensions [csv]
 breed [data-points data-point]
 breed [centroids centroid]
-globals [lu lu1 one two three four five six seven seventwo eight nine ten eleven twelve suitab s1 a i j k l n any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded] 
+globals [lu lu1 one two three four five six seven seventwo eight nine ten eleven twelve suitab s1 csv filelist a i j k l n any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded]
 turtles-own [lu_t ]
 patches-own [lu_p one_p two_p three_p four_p five_p six_p sevenone_p seventwo_p eight_p ten_p eleven_p twelve_p suitab_p ]
 to setup
   clear-all
   set lu gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/reforestas.asc"
   set one gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/reforestas.asc"
-  ;gis:set-world-envelope gis:envelope-of lu 
+  ;gis:set-world-envelope gis:envelope-of lu
   set two gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/resoildas.asc"
   set three gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/resoileas.asc"
   set four gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/resoiltas.asc"
@@ -21,14 +23,14 @@ to setup
   set eleven gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/wardmapas.asc"
   set twelve gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/croplandas.asc"
 
-  
+
   set suitab gis:create-raster gis:width-of lu gis:height-of lu gis:envelope-of lu
-  
+
 ;set eleven gis:create-raster gis:width-of lu gis:height-of lu gis:envelope-of lu
  ;set twelve gis:create-raster gis:width-of lu gis:height-of lu gis:envelope-of lu
- 
-  
-  
+
+
+
   gis:set-world-envelope (gis:envelope-union-of (gis:envelope-of lu)
                                                 (gis:envelope-of one)
                                                 (gis:envelope-of two)
@@ -42,55 +44,50 @@ to setup
                                                 (gis:envelope-of ten)
                                                 (gis:envelope-of eleven)
                                                 (gis:envelope-of twelve))
- 
+
   gis:paint twelve 150  ;to color the raster or the shapefile.
-  
+
 ;  set a gis:width-of one
 ;  print a
 end
 
 
-to classify  ; to color the landuses according to the land use.
-  ask turtles [
-    set lu_t gis:raster-sample twelve self ;variable lu_t will store the raster data as it reads from lu
-  ]
-  gis:apply-raster twelve twelve_p ; convert raster data into patch variable
+to classify
+
+  gis:apply-raster twelve lu_p ; convert raster data into patch variable
+  gis:apply-raster twelve ten_p
+  gis:apply-raster twelve eleven_p
+  gis:apply-raster twelve twelve_p
+
 
 end
-   
- 
+
+
 
 to classify1 ;just to test the assignment of shapes
-  
+
   ask patches [
     sprout 1]
-  
+
   ask turtles[
   set shape "circle" set color random 255
   if twelve_p = 0 [ set shape "circle" set color red ]
-  if eleven_p = 2  [set shape "circle" set color yellow]
+  if twelve_p = 2  [set shape "circle" set color yellow]
   ]
 end
 
 
 to suitability
-  
-  
+
+
   set suitab gis:create-raster gis:width-of seven gis:height-of one gis:envelope-of seven ; with actual command goes as gis:create-rater width height envelope
-  
-  ;gis:apply-raster suitab suitab_p
-  
-  ;ask patches  [
-  
-;suitab_p = one_p + two_p + three_p + four_p + five_p + six_p + sevenone_p + eight_p
- ; ]
-;gis:paint suitab_p 189 
+
 
 let x 0
 repeat (gis:width-of one)
 [ let y 0
   repeat (gis:height-of seven)
-  
+
   [ ;ask patches
     let go gis:raster-value one x y  ; gis:raster-value RasterDataset x y [reports the value of the given raster dataset in the given cell]
     let gt gis:raster-value two x y
@@ -102,31 +99,84 @@ repeat (gis:width-of one)
     ;let gset gis:raster-value seventwo x y
     let ge gis:raster-value eight x y
     ;let s1 gis:raster-value suitab x y
-    ;if ((go <= 0) or (go >= 0)) and ((gt <= 0) or (gt >= 0)) and 
+    ;if ((go <= 0) or (go >= 0)) and ((gt <= 0) or (gt >= 0)) and
     let s2 (go * 0.2034) + (gt * 0.1767) + (gth * 0.0774) + (gf * 0.1314) +  (gfi * 0.1108) + (gs *  0.0668) + (ge * 0.0642) + (gseo * 0.1568) ;+ gset + (gfi * 0.1108)
     ;set s1 s1 + (go + gt + gth + gf + gfi + gs  + ge) ;gseo + gset
     set s1 s2
-    
+
     gis:set-raster-value suitab x y s1 ; sets the value of given raster dataset at the given cell to a new value
     ; gis:set-raster-value RasterDataset x y value
-     
-  set y y + 1 ] 
+
+  set y y + 1 ]
  set x x + 1 ]
 
 gis:paint suitab 150
 
 end
 
-  ;;;;;;;Final outcome;;;;;
-  ;globals [ x y ]
 
+to visualise
+  ask turtles [
+    set lu_t gis:raster-sample suitab self ;variable lu_t will store the raster data as it reads from lu
+  ]
+  gis:apply-raster suitab suitab_p ; convert raster data into patch variable
+  gis:apply-raster twelve twelve_p
 
+  ask patches [
 
+    sprout 1]
 
-to setup2
-  reset-ticks
- 
+  ask turtles[
+  set shape "circle" set color grey
+  if suitab_p > 6.5 or twelve_p = 1 [ set shape "triangle" set color red ]   ; works in 5 to 7.5
+  ;if eleven_p = 2  [set shape "circle" set color yellow]
+  ]
 end
+
+
+;to check
+;  ask turtles[
+;  if suitab_p > 6 and eleven_p = 2 [set shape "square" set color yellow]
+;  ]
+;
+;end
+
+to clear
+ ; set fileList []
+
+end
+
+to openFile
+  set fileList []
+  file-open "population.csv"
+  set csv file-read-line ; reads line and report it as a string
+  set csv word csv "," ;  word value1 value2 ,concatenates the inputs together and reports the result as a string
+ ; show csv ; shows the first whole line of values with commas "33679,67627,29048,31176,37079,28337,30456," followed by comma at the end.
+
+  let mylist []
+  while [not empty? csv]
+  [
+    let $x position "," csv  ; position string1 string2 reports the first position of string1, here position  of "," is 6th starting from 0, so shown as 5.
+   ; show $x ; shows output of 5, which is just the no. of digits in the population.
+    let $item substring csv 0 $x ; extract item, reports just a section of the given string. extracting value from 0 to 5 with 0 inclusive and 5 exclusive.
+   ; show $item ; showing the values of the population as for example "12345"
+    carefully [set $item read-from-string $item] [] ; convert if number, interprets the given string as it is,
+   ; show $item ; the "" are gone and the values become numbers.
+    set mylist lput $item mylist ;appends value to the end of a list.
+   ; show mylist ; appending the numbers in every step.
+    set csv substring csv ($x + 1) length csv ; remove item and comma
+    ;show csv
+  ]
+  set fileList lput mylist fileList
+  show fileList
+
+  createwardpop
+
+
+end
+
+to createwardpop
+
 
 to land_use_colors
 
@@ -143,7 +193,7 @@ ask patches [
   ifelse (lu_p = 26) or (lu_p = 28) [ set pcolor lime ] [   ;; agri
   ifelse (lu_p = 29) [ set pcolor brown ] [                  ;; vacant
   ifelse (lu_p = 30) [ set pcolor turquoise ] [                  ;; forest
-   ] ] ] ] ] ] ] ] ] ] ]     ]          ;; 
+   ] ] ] ] ] ] ] ] ] ] ]     ]          ;;
 
 end
 @#$#@#$#@
@@ -270,6 +320,57 @@ BUTTON
 278
 NIL
 land_use_colors
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+10
+215
+87
+248
+NIL
+visualise
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+10
+340
+73
+373
+NIL
+clear
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+10
+380
+87
+413
+NIL
+openFile
 NIL
 1
 T
@@ -623,15 +724,9 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.2.0
+NetLogo 5.3
 @#$#@#$#@
 @#$#@#$#@
-1.0 
-    org.nlogo.sdm.gui.AggregateDrawing 2 
-        org.nlogo.sdm.gui.StockFigure "attributes" "attributes" 1 "FillColor" "Color" 225 225 182 64 123 60 40 
-            org.nlogo.sdm.gui.WrappedStock "" "" 0   
-        org.nlogo.sdm.gui.ConverterFigure "attributes" "attributes" 1 "FillColor" "Color" 130 188 183 315 396 50 50 
-            org.nlogo.sdm.gui.WrappedConverter "" ""
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
