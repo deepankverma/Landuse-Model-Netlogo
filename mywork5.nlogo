@@ -3,7 +3,8 @@ extensions [gis]
 ;extensions [csv]
 breed [data-points data-point]
 breed [centroids centroid]
-globals [lu lu1 one two three four five six seven seventwo eight nine ten eleven twelve suitab s1 csv filelist a i j k l n any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded]
+globals [lu lu1 one two three four five six seven seventwo eight nine ten eleven twelve suitab wards s1 csv  filelist fileList1 xy Z1 Z2 Z3 Z4 Z5 Z6 Z7 Z8 Z9 Z10 Z11 Z12 Z13 Z14 W1  W2  W3  W4  W5  W6  W7  W8  W9  W10  W11  W12  W13  W14  W15  W16  W17  W18  W19  W20  W21  W22  W23  W24  W25  W26  W27  W28  W29  W30  W31  W32  W33  W34  W35  W36  W37  W38  W39  W40  W41  W42  W43  W44  W45  W46  W47  W48  W49  W50  W51  W52  W53  W54  W55  W56  W57  W58  W59  W60  W61  W62  W63  W64  W65  W66  W67  W68  W69  W70
+a i j k l n any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded]
 turtles-own [lu_t ]
 patches-own [lu_p one_p two_p three_p four_p five_p six_p sevenone_p seventwo_p eight_p ten_p eleven_p twelve_p suitab_p ]
 to setup
@@ -45,7 +46,7 @@ to setup
                                                 (gis:envelope-of eleven)
                                                 (gis:envelope-of twelve))
 
-  gis:paint twelve 150  ;to color the raster or the shapefile.
+  gis:paint four 150  ;to color the raster or the shapefile.
 
 ;  set a gis:width-of one
 ;  print a
@@ -54,11 +55,11 @@ end
 
 to classify
 
-  gis:apply-raster twelve lu_p ; convert raster data into patch variable
-  gis:apply-raster twelve ten_p
-  gis:apply-raster twelve eleven_p
+  gis:apply-raster lu lu_p ; convert raster data into patch variable
+  gis:apply-raster ten ten_p
+  gis:apply-raster eleven eleven_p
   gis:apply-raster twelve twelve_p
-
+show count patches with [eleven_p = 18]
 
 end
 
@@ -66,11 +67,14 @@ end
 
 to classify1 ;just to test the assignment of shapes
 
-  ask patches [
-    sprout 1]
+  ask patches
+    [
+    sprout 1
+    ]
 
   ask turtles[
-  set shape "circle" set color random 255
+  set shape "circle" set color grey
+
   if twelve_p = 0 [ set shape "circle" set color red ]
   if twelve_p = 2  [set shape "circle" set color yellow]
   ]
@@ -96,12 +100,8 @@ repeat (gis:width-of one)
     let gfi gis:raster-value five x y
     let gs gis:raster-value six x y
     let gseo gis:raster-value seven x y
-    ;let gset gis:raster-value seventwo x y
     let ge gis:raster-value eight x y
-    ;let s1 gis:raster-value suitab x y
-    ;if ((go <= 0) or (go >= 0)) and ((gt <= 0) or (gt >= 0)) and
     let s2 (go * 0.2034) + (gt * 0.1767) + (gth * 0.0774) + (gf * 0.1314) +  (gfi * 0.1108) + (gs *  0.0668) + (ge * 0.0642) + (gseo * 0.1568) ;+ gset + (gfi * 0.1108)
-    ;set s1 s1 + (go + gt + gth + gf + gfi + gs  + ge) ;gseo + gset
     set s1 s2
 
     gis:set-raster-value suitab x y s1 ; sets the value of given raster dataset at the given cell to a new value
@@ -147,7 +147,11 @@ to clear
 end
 
 to openFile
+  let x 0
+  repeat 14
+  [
   set fileList []
+ ; set fileList1 []
   file-open "population.csv"
   set csv file-read-line ; reads line and report it as a string
   set csv word csv "," ;  word value1 value2 ,concatenates the inputs together and reports the result as a string
@@ -161,7 +165,9 @@ to openFile
     let $item substring csv 0 $x ; extract item, reports just a section of the given string. extracting value from 0 to 5 with 0 inclusive and 5 exclusive.
    ; show $item ; showing the values of the population as for example "12345"
     carefully [set $item read-from-string $item] [] ; convert if number, interprets the given string as it is,
-   ; show $item ; the "" are gone and the values become numbers.
+    show $item ; the "" are gone and the values become numbers.
+    set $item $item * 10
+
     set mylist lput $item mylist ;appends value to the end of a list.
    ; show mylist ; appending the numbers in every step.
     set csv substring csv ($x + 1) length csv ; remove item and comma
@@ -169,13 +175,142 @@ to openFile
   ]
   set fileList lput mylist fileList
   show fileList
-
-  createwardpop
+      if x = 0 [ set Z1 fileList
+               show Z1]
+      if x = 1 [ set Z2 fileList
+               show Z2]
+      if x = 2 [ set Z3 fileList
+               show Z3]
+      if x = 3 [ set Z4 fileList
+               show Z4]
+      if x = 4 [ set Z5 fileList
+               show Z5]
+      if x = 5 [ set Z6 fileList
+               show Z6]
+      if x = 6 [ set Z7 fileList
+               show Z7]
+      if x = 7 [ set Z8 fileList
+               show Z8]
+      if x = 8 [ set Z9 fileList
+               show Z9]
+      if x = 9 [ set Z10 fileList
+               show Z10]
+      if x = 10 [ set Z11 fileList
+               show Z11]
+      if x = 11 [ set Z12 fileList
+               show Z12]
+      if x = 12 [ set Z13 fileList
+               show Z13]
+      if x = 13 [ set Z14 fileList
+               show Z14]
+ set x x + 1
+  ]
+  ;show fileList1
+ show Z1
+ show Z2
+ show Z3
+ show Z4
+ show Z5
+ show Z6
+ show Z7
+ show Z8
+ show Z9
+ show Z10
+ show Z11
+ show Z12
+ show Z13
+ show Z14
 
 
 end
 
-to createwardpop
+to read-file
+  file-open "population.csv"
+  while [not file-at-end?][
+
+    set W1 file-read-line
+    set W2 file-read-line
+    set W3 file-read-line
+    set W4 file-read-line
+    set W5 file-read-line
+    set W6 file-read-line
+    set W7 file-read-line
+    set W8 file-read-line
+    set W9 file-read-line
+    set W10 file-read-line
+    set W11 file-read-line
+    set W12 file-read-line
+    set W13 file-read-line
+    set W14 file-read-line
+    set W15 file-read-line
+    set W16 file-read-line
+    set W17 file-read-line
+    set W18 file-read-line
+    set W19 file-read-line
+    set W20 file-read-line
+    set W21 file-read-line
+    set W22 file-read-line
+    set W23 file-read-line
+    set W24 file-read-line
+    set W25 file-read-line
+    set W26 file-read-line
+    set W27 file-read-line
+    set W28 file-read-line
+    set W29 file-read-line
+    set W30 file-read-line
+    set W31 file-read-line
+    set W32 file-read-line
+    set W33 file-read-line
+    set W34 file-read-line
+    set W35 file-read-line
+    set W36 file-read-line
+    set W37 file-read-line
+    set W38 file-read-line
+    set W39 file-read-line
+    set W40 file-read-line
+    set W41 file-read-line
+    set W42 file-read-line
+    set W43 file-read-line
+    set W44 file-read-line
+    set W45 file-read-line
+    set W46 file-read-line
+    set W47 file-read-line
+    set W48 file-read-line
+    set W49 file-read-line
+    set W50 file-read-line
+    set W51 file-read-line
+    set W52 file-read-line
+    set W53 file-read-line
+    set W54 file-read-line
+    set W55 file-read-line
+    set W56 file-read-line
+    set W57 file-read-line
+    set W58 file-read-line
+    set W59 file-read-line
+    set W60 file-read-line
+    set W61 file-read-line
+    set W62 file-read-line
+    set W63 file-read-line
+    set W64 file-read-line
+    set W65 file-read-line
+    set W66 file-read-line
+    set W67 file-read-line
+    set W68 file-read-line
+    set W69 file-read-line
+    set W70 file-read-line
+
+
+  show W3
+
+  ]
+
+
+
+  file-close
+
+end
+
+
 
 
 to land_use_colors
@@ -200,10 +335,10 @@ end
 GRAPHICS-WINDOW
 458
 10
-2478
-2051
-100
-100
+5478
+3551
+250
+175
 10.0
 1
 2
@@ -214,10 +349,10 @@ GRAPHICS-WINDOW
 0
 0
 1
--100
-100
--100
-100
+-250
+250
+-175
+175
 0
 0
 1
@@ -292,27 +427,6 @@ NIL
 NIL
 1
 
-CHOOSER
-309
-46
-447
-91
-chooser
-chooser
-"linear" "exponential" "logarithmic"
-2
-
-INPUTBOX
-310
-110
-465
-170
-patch_density
-500
-1
-0
-Number
-
 BUTTON
 206
 245
@@ -371,6 +485,23 @@ BUTTON
 413
 NIL
 openFile
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+10
+430
+87
+463
+NIL
+read-file
 NIL
 1
 T
