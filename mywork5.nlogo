@@ -3,7 +3,7 @@ extensions [gis]
 ;extensions [csv]
 breed [data-points data-point]
 breed [centroids centroid]
-globals [lu lu1 one two three four five six seven seventwo eight nine ten eleven twelve suitab wards s1 csv  filelist fileList1 xy Z1 Z2 Z3 Z4 Z5 Z6 Z7 Z8 Z9 Z10 Z11 Z12 Z13 Z14 W1  W2  W3  W4  W5  W6  W7  W8  W9  W10  W11  W12  W13  W14  W15  W16  W17  W18  W19  W20  W21  W22  W23  W24  W25  W26  W27  W28  W29  W30  W31  W32  W33  W34  W35  W36  W37  W38  W39  W40  W41  W42  W43  W44  W45  W46  W47  W48  W49  W50  W51  W52  W53  W54  W55  W56  W57  W58  W59  W60  W61  W62  W63  W64  W65  W66  W67  W68  W69  W70
+globals [lu lu1 one two three four five six seven seventwo eight nine ten eleven twelve suitab wards s1 csv c1 filelist fileList1 xy Z1 Z2 Z3 Z4 Z5 Z6 Z7 Z8 Z9 Z10 Z11 Z12 Z13 Z14 W1  W2  W3  W4  W5  W6  W7  W8  W9  W10  W11  W12  W13  W14  W15  W16  W17  W18  W19  W20  W21  W22  W23  W24  W25  W26  W27  W28  W29  W30  W31  W32  W33  W34  W35  W36  W37  W38  W39  W40  W41  W42  W43  W44  W45  W46  W47  W48  W49  W50  W51  W52  W53  W54  W55  W56  W57  W58  W59  W60  W61  W62  W63  W64  W65  W66  W67  W68  W69  W70
 a i j k l n any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded]
 turtles-own [lu_t ]
 patches-own [lu_p one_p two_p three_p four_p five_p six_p sevenone_p seventwo_p eight_p ten_p eleven_p twelve_p suitab_p ]
@@ -59,7 +59,11 @@ to classify
   gis:apply-raster ten ten_p
   gis:apply-raster eleven eleven_p
   gis:apply-raster twelve twelve_p
-show count patches with [eleven_p = 18]
+show count patches with [eleven_p = 1]
+
+set c1 (count patches with [eleven_p = 1] / 500)
+show c1
+
 
 end
 
@@ -173,9 +177,9 @@ to openFile
     set csv substring csv ($x + 1) length csv ; remove item and comma
     ;show csv
   ]
-  set fileList lput mylist fileList
-  show fileList
-      if x = 0 [ set Z1 fileList
+  ;set fileList lput mylist fileList
+  show mylist
+      if x = 0 [ set Z1 mylist
                show Z1]
       if x = 1 [ set Z2 fileList
                show Z2]
@@ -221,95 +225,25 @@ to openFile
  show Z13
  show Z14
 
+file-close
 
 end
 
-to read-file
-  file-open "population.csv"
-  while [not file-at-end?][
 
-    set W1 file-read-line
-    set W2 file-read-line
-    set W3 file-read-line
-    set W4 file-read-line
-    set W5 file-read-line
-    set W6 file-read-line
-    set W7 file-read-line
-    set W8 file-read-line
-    set W9 file-read-line
-    set W10 file-read-line
-    set W11 file-read-line
-    set W12 file-read-line
-    set W13 file-read-line
-    set W14 file-read-line
-    set W15 file-read-line
-    set W16 file-read-line
-    set W17 file-read-line
-    set W18 file-read-line
-    set W19 file-read-line
-    set W20 file-read-line
-    set W21 file-read-line
-    set W22 file-read-line
-    set W23 file-read-line
-    set W24 file-read-line
-    set W25 file-read-line
-    set W26 file-read-line
-    set W27 file-read-line
-    set W28 file-read-line
-    set W29 file-read-line
-    set W30 file-read-line
-    set W31 file-read-line
-    set W32 file-read-line
-    set W33 file-read-line
-    set W34 file-read-line
-    set W35 file-read-line
-    set W36 file-read-line
-    set W37 file-read-line
-    set W38 file-read-line
-    set W39 file-read-line
-    set W40 file-read-line
-    set W41 file-read-line
-    set W42 file-read-line
-    set W43 file-read-line
-    set W44 file-read-line
-    set W45 file-read-line
-    set W46 file-read-line
-    set W47 file-read-line
-    set W48 file-read-line
-    set W49 file-read-line
-    set W50 file-read-line
-    set W51 file-read-line
-    set W52 file-read-line
-    set W53 file-read-line
-    set W54 file-read-line
-    set W55 file-read-line
-    set W56 file-read-line
-    set W57 file-read-line
-    set W58 file-read-line
-    set W59 file-read-line
-    set W60 file-read-line
-    set W61 file-read-line
-    set W62 file-read-line
-    set W63 file-read-line
-    set W64 file-read-line
-    set W65 file-read-line
-    set W66 file-read-line
-    set W67 file-read-line
-    set W68 file-read-line
-    set W69 file-read-line
-    set W70 file-read-line
-
-
-  show W3
-
-  ]
-
-
-
-  file-close
+to evolve
+  reset-ticks
 
 end
 
+to evolveZ1
+
+  foreach  Z1 [let a1 (? * c1)
+
+  ;show max Z1
+
+  show a1]
+
+end
 
 
 
@@ -496,12 +430,12 @@ NIL
 1
 
 BUTTON
-10
-430
-87
-463
+185
+335
+267
+368
 NIL
-read-file
+evolveZ1
 NIL
 1
 T
