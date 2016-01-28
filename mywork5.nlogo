@@ -4,7 +4,7 @@ extensions [gis]
 breed [data-points data-point]
 breed [centroids centroid]
 globals [lu lu1 one two three four five six seven seventwo eight nine ten eleven twelve suitab wards s1 csv c1 filelist fileList1 xy Z1 Z2 Z3 Z4 Z5 Z6 Z7 Z8 Z9 Z10 Z11 Z12 Z13 Z14 W1  W2  W3  W4  W5  W6  W7  W8  W9  W10  W11  W12  W13  W14  W15  W16  W17  W18  W19  W20  W21  W22  W23  W24  W25  W26  W27  W28  W29  W30  W31  W32  W33  W34  W35  W36  W37  W38  W39  W40  W41  W42  W43  W44  W45  W46  W47  W48  W49  W50  W51  W52  W53  W54  W55  W56  W57  W58  W59  W60  W61  W62  W63  W64  W65  W66  W67  W68  W69  W70
-a i j k l n any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded]
+a i j k l n1 any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded]
 turtles-own [lu_t ]
 patches-own [lu_p one_p two_p three_p four_p five_p six_p sevenone_p seventwo_p eight_p ten_p eleven_p twelve_p suitab_p ]
 to setup
@@ -61,7 +61,7 @@ to classify
   gis:apply-raster twelve twelve_p
 show count patches with [eleven_p = 1]
 
-set c1 (count patches with [eleven_p = 1] / 500)
+set c1 (count patches with [eleven_p = 1] / 100)
 show c1
 
 
@@ -131,8 +131,8 @@ to visualise
     sprout 1]
 
   ask turtles[
-  set shape "circle" set color grey
-  if suitab_p > 6.5 or twelve_p = 1 [ set shape "triangle" set color red ]   ; works in 5 to 7.5
+  ;set shape "circle" set color grey
+  if suitab_p > 7 and eleven_p = 1 [ set shape "triangle" set color red ]   ; works in 5 to 7.5
   ;if eleven_p = 2  [set shape "circle" set color yellow]
   ]
 end
@@ -169,8 +169,8 @@ to openFile
     let $item substring csv 0 $x ; extract item, reports just a section of the given string. extracting value from 0 to 5 with 0 inclusive and 5 exclusive.
    ; show $item ; showing the values of the population as for example "12345"
     carefully [set $item read-from-string $item] [] ; convert if number, interprets the given string as it is,
-    show $item ; the "" are gone and the values become numbers.
-    set $item $item * 10
+   ; show $item ; the "" are gone and the values become numbers.
+   ; set $item $item * 10
 
     set mylist lput $item mylist ;appends value to the end of a list.
    ; show mylist ; appending the numbers in every step.
@@ -180,33 +180,47 @@ to openFile
   ;set fileList lput mylist fileList
   show mylist
       if x = 0 [ set Z1 mylist
-               show Z1]
-      if x = 1 [ set Z2 fileList
-               show Z2]
-      if x = 2 [ set Z3 fileList
-               show Z3]
-      if x = 3 [ set Z4 fileList
-               show Z4]
-      if x = 4 [ set Z5 fileList
-               show Z5]
-      if x = 5 [ set Z6 fileList
-               show Z6]
-      if x = 6 [ set Z7 fileList
-               show Z7]
-      if x = 7 [ set Z8 fileList
-               show Z8]
-      if x = 8 [ set Z9 fileList
-               show Z9]
-      if x = 9 [ set Z10 fileList
-               show Z10]
-      if x = 10 [ set Z11 fileList
-               show Z11]
-      if x = 11 [ set Z12 fileList
-               show Z12]
-      if x = 12 [ set Z13 fileList
-               show Z13]
-      if x = 13 [ set Z14 fileList
-               show Z14]
+               show Z1
+               ]
+      if x = 1 [ set Z2 mylist
+               ;show Z2
+               ]
+      if x = 2 [ set Z3 mylist
+               ;show Z3
+               ]
+      if x = 3 [ set Z4 mylist
+               ;show Z4
+               ]
+      if x = 4 [ set Z5 mylist
+               ;show Z5
+               ]
+      if x = 5 [ set Z6 mylist
+               ;show Z6
+               ]
+      if x = 6 [ set Z7 mylist
+               ;show Z7
+               ]
+      if x = 7 [ set Z8 mylist
+               ;show Z8
+               ]
+      if x = 8 [ set Z9 mylist
+               ;show Z9
+               ]
+      if x = 9 [ set Z10 mylist
+               ;show Z10
+               ]
+      if x = 10 [ set Z11 mylist
+               ;show Z11
+               ]
+      if x = 11 [ set Z12 mylist
+               ;show Z12
+               ]
+      if x = 12 [ set Z13 mylist
+               ;show Z13
+               ]
+      if x = 13 [ set Z14 mylist
+               ;show Z14
+               ]
  set x x + 1
   ]
   ;show fileList1
@@ -230,18 +244,47 @@ file-close
 end
 
 
-to evolve
-  reset-ticks
 
-end
 
 to evolveZ1
 
-  foreach  Z1 [let a1 (? * c1)
+reset-ticks
 
+  set n1 28600 ; temporary setup, once original values are in place, it will be deleted
+
+  let zone1 count patches with [eleven_p = 1 or eleven_p = 2 or eleven_p = 3 or eleven_p = 4] ; counting no. of pixels in Zone 1 which is collection of wards 1to 4
+
+  show zone1
+ ; foreach  Z1 [let a1 ?  * c1
+  foreach  Z1 [let a1 ?          ; here for each years increase in built area is given
   ;show max Z1
 
-  show a1]
+
+  while [ (n1 < a1) ]            ; numbers entered to run the loop
+  [ask one-of patches with [suitab_p > 6.5 and eleven_p = 1]       ; ask one of the patches is used as it will ask one patch at every time rather than all the patches in once
+      [set pcolor yellow
+        ;sprout 1
+
+      ]
+
+   ifelse (n1 + 1 = a1)          ; a1 changes as the it moves to second value in list, hence stop function is used to halt the process.
+   [  stop ]
+   ;[tick]
+   [ show a1]
+
+ show n1
+ let y1 count patches with [pcolor = yellow]
+ show y1
+ set n1 n1 + 1 ]
+
+  let z1res a1 / Z1R
+  let z1com a1 / Z1C
+  let z1pubs a1 / Z1PS
+  let z1rec a1 / Z1RC
+
+
+
+     ]
 
 end
 
@@ -267,12 +310,12 @@ ask patches [
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-458
+515
 10
-5478
-3551
-250
-175
+1535
+851
+50
+40
 10.0
 1
 2
@@ -283,10 +326,10 @@ GRAPHICS-WINDOW
 0
 0
 1
--250
-250
--175
-175
+-50
+50
+-40
+40
 0
 0
 1
@@ -294,10 +337,10 @@ ticks
 30.0
 
 BUTTON
-15
-46
-78
-79
+5
+20
+68
+53
 NIL
 setup
 NIL
@@ -311,10 +354,10 @@ NIL
 1
 
 BUTTON
-14
-102
-86
-135
+70
+20
+142
+53
 NIL
 classify
 NIL
@@ -328,27 +371,10 @@ NIL
 1
 
 BUTTON
-14
-159
-93
-192
-NIL
-classify1
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-107
-46
-190
-79
+145
+20
+210
+53
 NIL
 suitability
 NIL
@@ -362,27 +388,10 @@ NIL
 1
 
 BUTTON
-206
-245
-326
-278
-NIL
-land_use_colors
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-10
-215
-87
-248
+5
+70
+82
+103
 NIL
 visualise
 NIL
@@ -396,27 +405,10 @@ NIL
 1
 
 BUTTON
-10
-340
-73
-373
-NIL
-clear
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-10
-380
-87
-413
+5
+120
+82
+153
 NIL
 openFile
 NIL
@@ -430,10 +422,10 @@ NIL
 1
 
 BUTTON
-185
-335
-267
-368
+5
+195
+87
+228
 NIL
 evolveZ1
 NIL
@@ -445,6 +437,95 @@ NIL
 NIL
 NIL
 1
+
+TEXTBOX
+165
+160
+315
+178
+ZONE 1 CALCULATIONS
+11
+0.0
+1
+
+SLIDER
+105
+195
+197
+228
+Z1R
+Z1R
+0.35
+0.75
+0.7
+0.05
+1
+NIL
+HORIZONTAL
+
+SLIDER
+205
+195
+297
+228
+Z1PS
+Z1PS
+0.00
+0.15
+0.1
+0.05
+1
+NIL
+HORIZONTAL
+
+SLIDER
+305
+195
+397
+228
+Z1RC
+Z1RC
+0.00
+0.15
+0.15
+0.05
+1
+NIL
+HORIZONTAL
+
+SLIDER
+405
+195
+497
+228
+Z1C
+Z1C
+0.00
+0.10
+0.05
+0.01
+1
+NIL
+HORIZONTAL
+
+PLOT
+105
+240
+305
+390
+plot 1
+ticks
+Develoed area
+0.0
+10.0
+0.0
+10.0
+true
+true
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot a1"
+"pen-1" 1.0 0 -7500403 true "" ""
 
 @#$#@#$#@
 ## WHAT IS IT?
