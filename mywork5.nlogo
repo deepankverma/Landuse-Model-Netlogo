@@ -6,7 +6,7 @@ breed [centroids centroid]
 globals [lu lu1 one two three four five six seven seventwo eight nine ten eleven twelve thirteen fourteen suitab wards s1 csv c1 filelist fileList1 xy Z1 Z2 Z3 Z4 Z5 Z6 Z7 Z8 Z9 Z10 Z11 Z12 Z13 Z14 W1  W2  W3  W4  W5  W6  W7  W8  W9  W10  W11  W12  W13  W14  W15  W16  W17  W18  W19  W20  W21  W22  W23  W24  W25  W26  W27  W28  W29  W30  W31  W32  W33  W34  W35  W36  W37  W38  W39  W40  W41  W42  W43  W44  W45  W46  W47  W48  W49  W50  W51  W52  W53  W54  W55  W56  W57  W58  W59  W60  W61  W62  W63  W64  W65  W66  W67  W68  W69  W70
 a i j k l n1 any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded]
 turtles-own [lu_t ]
-patches-own [lu_p one_p two_p three_p four_p five_p six_p sevenone_p seventwo_p eight_p ten_p eleven_p twelve_p suitab_p ]
+patches-own [lu_p one_p two_p three_p four_p five_p six_p sevenone_p seventwo_p eight_p ten_p eleven_p twelve_p suitab_p fourteen_p]
 to setup
   clear-all
   set lu gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/reforestas.asc"
@@ -48,7 +48,9 @@ to setup
                                                 (gis:envelope-of nine)
                                                 (gis:envelope-of ten)
                                                 (gis:envelope-of eleven)
-                                                (gis:envelope-of twelve))
+                                                (gis:envelope-of twelve)
+                                                (gis:envelope-of thirteen)
+                                                (gis:envelope-of fourteen))
 
   gis:paint four 150  ;to color the raster or the shapefile.
 
@@ -63,9 +65,10 @@ to classify
   gis:apply-raster ten ten_p
   gis:apply-raster eleven eleven_p
   gis:apply-raster twelve twelve_p
-show count patches with [eleven_p = 1]
+  gis:apply-raster fourteen fourteen_p
+show count patches with [eleven_p = 1 or eleven_p = 2 or eleven_p = 3 or eleven_p = 4]
 
-set c1 (count patches with [eleven_p = 1] / 100)
+set c1 (count patches with [eleven_p = 1 or eleven_p = 2 or eleven_p = 3 or eleven_p = 4] / 4578.73)   ; unitary method is applied here, which shows how much patches in 1 ha of area is present. Necessary if the extent of model is changed.
 show c1
 
 
@@ -130,13 +133,16 @@ to visualise
   gis:apply-raster suitab suitab_p ; convert raster data into patch variable
   gis:apply-raster twelve twelve_p
 
+
+
+
   ask patches [
 
-    sprout 1]
-
-  ask turtles[
+;    sprout 1]
+;
+;  ask turtles[
   ;set shape "circle" set color grey
-  if suitab_p > 7 and eleven_p = 1 [ set shape "triangle" set color red ]   ; works in 5 to 7.5
+  if fourteen_p = 0  [ set pcolor green ]   ; works in 5 to 7.5
   ;if eleven_p = 2  [set shape "circle" set color yellow]
   ]
 end
@@ -255,30 +261,50 @@ to evolveZ1
 reset-ticks
 
 
-  let zone1 count patches with [eleven_p = 1 or eleven_p = 2 or eleven_p = 3 or eleven_p = 4] ; counting no. of pixels in Zone 1 which is collection of wards 1to 4
+ ; let zone1 count patches with [eleven_p = 1 or eleven_p = 2 or eleven_p = 3 or eleven_p = 4] ; counting no. of pixels in Zone 1 which is collection of wards 1to 4
 
-  show zone1
- ; foreach  Z1 [let a1 ?  * c1
-  foreach  Z1 [let a1 ?          ; here for each years increase in built area is given
+ ; show zone1
+  foreach  Z1 [let a1 ?  * c1
+ ; foreach  Z1 [let a1 ?          ; here for each years increase in built area is given
   ;show max Z1
+ set a1 round(a1)
+
+ while [ n1 < a1]
+ [ask one-of patches with [(eleven_p = 1 or eleven_p = 2 or eleven_p = 3 or eleven_p = 4) and (fourteen_p = 0)]
+   [ ifelse not any? patches with [ pcolor = red ]
+     [set pcolor red]
+     [if any? patches with [ pcolor = red] [ask patches in-radius 3 [ set pcolor red]]
+   ]
+
+   ]
 
 
-  while [ (n1 < a1) ]            ; numbers entered to run the loop
-  [ask one-of patches with [suitab_p > 6.5 and eleven_p = 1]       ; ask one of the patches is used as it will ask one patch at every time rather than all the patches in once
-      [set pcolor yellow
-        ;sprout 1
 
-      ]
+;  while [ (n1 < a1) ]            ; numbers entered to run the loop
+;  [ask one-of patches with [suitab_p > 6.5 and eleven_p = 1]       ; ask one of the patches is used as it will ask one patch at every time rather than all the patches in once
+;      [set pcolor yellow
+;        ;sprout 1
+;
+;      ]
 
    ifelse (n1 + 1 = a1)          ; a1 changes as the it moves to second value in list, hence stop function is used to halt the process.
-   [  stop ]
-   ;[tick]
+   [ tick  stop ]
+
    [ show a1]
 
  show n1
- let y1 count patches with [pcolor = yellow]
- show y1
+
+
+
+
+
+
+
+
  set n1 n1 + 1 ]
+
+  let y1 count patches with [pcolor = red]
+ show y1
 
   let z1res a1 / Z1R
   let z1com a1 / Z1C
@@ -315,10 +341,10 @@ end
 GRAPHICS-WINDOW
 515
 10
-1535
-851
+2035
+1051
+75
 50
-40
 10.0
 1
 2
@@ -329,10 +355,10 @@ GRAPHICS-WINDOW
 0
 0
 1
+-75
+75
 -50
 50
--40
-40
 0
 0
 1
