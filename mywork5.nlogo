@@ -3,7 +3,7 @@ extensions [gis]
 ;extensions [csv]
 breed [data-points data-point]
 breed [centroids centroid]
-globals [lu lu1 one two three four five six seven seventwo eight nine ten eleven twelve thirteen fourteen suitab wards s1 csv c1 filelist fileList1 xy Z1 Z2 Z3 Z4 Z5 Z6 Z7 Z8 Z9 Z10 Z11 Z12 Z13 Z14 W1  W2  W3  W4  W5  W6  W7  W8  W9  W10  W11  W12  W13  W14  W15  W16  W17  W18  W19  W20  W21  W22  W23  W24  W25  W26  W27  W28  W29  W30  W31  W32  W33  W34  W35  W36  W37  W38  W39  W40  W41  W42  W43  W44  W45  W46  W47  W48  W49  W50  W51  W52  W53  W54  W55  W56  W57  W58  W59  W60  W61  W62  W63  W64  W65  W66  W67  W68  W69  W70
+globals [lu lu1 one two three four five six seven seventwo eight nine ten eleven twelve thirteen fourteen suitab wards s1 a1 a2 csv c1 years filelist fileList1 xy Z1 Z2 Z3 Z4 Z5 Z6 Z7 Z8 Z9 Z10 Z11 Z12 Z13 Z14 W1  W2  W3  W4  W5  W6  W7  W8  W9  W10  W11  W12  W13  W14  W15  W16  W17  W18  W19  W20  W21  W22  W23  W24  W25  W26  W27  W28  W29  W30  W31  W32  W33  W34  W35  W36  W37  W38  W39  W40  W41  W42  W43  W44  W45  W46  W47  W48  W49  W50  W51  W52  W53  W54  W55  W56  W57  W58  W59  W60  W61  W62  W63  W64  W65  W66  W67  W68  W69  W70
 a i j k l n1 any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded]
 turtles-own [lu_t ]
 patches-own [lu_p one_p two_p three_p four_p five_p six_p sevenone_p seventwo_p eight_p ten_p eleven_p twelve_p suitab_p fourteen_p]
@@ -68,7 +68,7 @@ to classify
   gis:apply-raster fourteen fourteen_p
 show count patches with [eleven_p = 1 or eleven_p = 2 or eleven_p = 3 or eleven_p = 4]
 
-set c1 (count patches with [eleven_p = 1 or eleven_p = 2 or eleven_p = 3 or eleven_p = 4] / 4578.73)   ; unitary method is applied here, which shows how much patches in 1 ha of area is present. Necessary if the extent of model is changed.
+set c1 (count patches with [eleven_p = 1 or eleven_p = 2 or eleven_p = 3 or eleven_p = 4] / 2413.425)   ; unitary method is applied here, which shows how much patches in 1 ha of area is present. Necessary if the extent of model is changed.
 show c1
 
 
@@ -260,11 +260,12 @@ to evolveZ1
 
 reset-ticks
 
+ set years 2011
 
  ; let zone1 count patches with [eleven_p = 1 or eleven_p = 2 or eleven_p = 3 or eleven_p = 4] ; counting no. of pixels in Zone 1 which is collection of wards 1to 4
 
  ; show zone1
-  foreach  Z1 [let a1 ?  * c1
+  foreach  Z1 [set a1 ?  * c1
  ; foreach  Z1 [let a1 ?          ; here for each years increase in built area is given
   ;show max Z1
  set a1 round(a1)
@@ -273,7 +274,7 @@ reset-ticks
  [ask one-of patches with [(eleven_p = 1 or eleven_p = 2 or eleven_p = 3 or eleven_p = 4) and (fourteen_p = 0)]
    [ ifelse not any? patches with [ pcolor = red ]
      [set pcolor red]
-     [if any? patches with [ pcolor = red] [ask patches in-radius 3 [ set pcolor red]]
+     [ ask one-of patches in-radius 3  [ set pcolor red]
    ]
 
    ]
@@ -288,30 +289,34 @@ reset-ticks
 ;      ]
 
    ifelse (n1 + 1 = a1)          ; a1 changes as the it moves to second value in list, hence stop function is used to halt the process.
-   [ tick  stop ]
+   [ set years  years + 1  show years  ]
 
    [ show a1]
 
  show n1
 
 
+tick
 
+if  ( years > 2011 )
 
+ [ set a2 a1
 
+   set a2 a2 - a1
 
+   let z1res a2 / Z1R
+  let z1com a2 / Z1C
+  let z1pubs a2 / Z1PS
+  let z1rec a2 / Z1RC
 
+  show a2
+  show z1res
+ ]
+
+if (years = 2013)
+[stop]
 
  set n1 n1 + 1 ]
-
-  let y1 count patches with [pcolor = red]
- show y1
-
-  let z1res a1 / Z1R
-  let z1com a1 / Z1C
-  let z1pubs a1 / Z1PS
-  let z1rec a1 / Z1RC
-
-
 
      ]
 
@@ -341,10 +346,10 @@ end
 GRAPHICS-WINDOW
 515
 10
-2035
-1051
-75
+1535
+651
 50
+30
 10.0
 1
 2
@@ -355,10 +360,10 @@ GRAPHICS-WINDOW
 0
 0
 1
--75
-75
 -50
 50
+-30
+30
 0
 0
 1
@@ -486,7 +491,7 @@ Z1R
 Z1R
 0.35
 0.75
-0.7
+0.6
 0.05
 1
 NIL
@@ -501,7 +506,7 @@ Z1PS
 Z1PS
 0.00
 0.15
-0.1
+0.05
 0.05
 1
 NIL
@@ -538,10 +543,10 @@ NIL
 HORIZONTAL
 
 PLOT
-105
+5
 240
-305
-390
+500
+640
 plot 1
 ticks
 Develoed area
@@ -553,8 +558,8 @@ true
 true
 "" ""
 PENS
-"default" 1.0 0 -16777216 true "" "plot a1"
-"pen-1" 1.0 0 -7500403 true "" ""
+"c1" 1.0 2 -817084 true "" "plot count patches with [eleven_p = 1 or eleven_p = 2 or eleven_p = 3 or eleven_p = 4]plot c1"
+"n1" 1.0 0 -7500403 true "" "plot n1"
 
 @#$#@#$#@
 ## WHAT IS IT?
