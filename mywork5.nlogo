@@ -4,9 +4,9 @@ extensions [gis]
 breed [data-points data-point]
 breed [centroids centroid]
 globals [lu lu1 one two three four five six seven seventwo eight nine ten eleven twelve thirteen fourteen suitab wards s1 a1 a2 csv c1 years filelist fileList1 xy Z1 Z2 Z3 Z4 Z5 Z6 Z7 Z8 Z9 Z10 Z11 Z12 Z13 Z14 W1  W2  W3  W4  W5  W6  W7  W8  W9  W10  W11  W12  W13  W14  W15  W16  W17  W18  W19  W20  W21  W22  W23  W24  W25  W26  W27  W28  W29  W30  W31  W32  W33  W34  W35  W36  W37  W38  W39  W40  W41  W42  W43  W44  W45  W46  W47  W48  W49  W50  W51  W52  W53  W54  W55  W56  W57  W58  W59  W60  W61  W62  W63  W64  W65  W66  W67  W68  W69  W70
-a i j k l n1 any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded]
+a i j k l n1 any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded areaZ1 congestionfactZ1 originalcongestionZ1]
 turtles-own [lu_t ]
-patches-own [lu_p one_p two_p three_p four_p five_p six_p sevenone_p seventwo_p eight_p ten_p eleven_p twelve_p suitab_p fourteen_p]
+patches-own [lu_p one_p two_p three_p four_p five_p six_p sevenone_p seventwo_p eight_p ten_p eleven_p twelve_p thirteen_p suitab_p fourteen_p]
 to setup
   clear-all
   set lu gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/reforestas.asc"
@@ -66,6 +66,7 @@ to classify
   gis:apply-raster eleven eleven_p
   gis:apply-raster twelve twelve_p
   gis:apply-raster fourteen fourteen_p
+  gis:apply-raster thirteen thirteen_p
 show count patches with [eleven_p = 1 or eleven_p = 2 or eleven_p = 3 or eleven_p = 4]
 
 set c1 (count patches with [eleven_p = 1 or eleven_p = 2 or eleven_p = 3 or eleven_p = 4] / 2413.425)   ; unitary method is applied here, which shows how much patches in 1 ha of area is present. Necessary if the extent of model is changed.
@@ -74,7 +75,27 @@ show c1
 
 end
 
+to data
 
+  set areaZ1 3602.68
+  set congestionfactZ1 0.75
+  set originalcongestionZ1 n1 / (areaZ1 * c1)
+
+end
+
+to-report congest
+
+
+  report originalcongestionZ1
+
+
+end
+
+to-report yearnumber
+
+  report years
+
+end
 
 to classify1 ;just to test the assignment of shapes
 
@@ -268,7 +289,12 @@ reset-ticks
   foreach  Z1 [set a1 ?  * c1
  ; foreach  Z1 [let a1 ?          ; here for each years increase in built area is given
   ;show max Z1
+
+
+
  set a1 round(a1)
+
+
 
  while [ n1 < a1]
  [ask one-of patches with [(eleven_p = 1 or eleven_p = 2 or eleven_p = 3 or eleven_p = 4) and (fourteen_p = 0)]
@@ -300,22 +326,38 @@ tick
 
 if  ( years > 2011 )
 
- [ set a2 a1
+ [
 
-   set a2 a2 - a1
 
-   let z1res a2 / Z1R
-  let z1com a2 / Z1C
-  let z1pubs a2 / Z1PS
-  let z1rec a2 / Z1RC
+
+   set a2 a1
+show a2
+   ;set a2 a2 + 1 - a1
+
+ask one-of patches with [(eleven_p = 1 or eleven_p = 2 or eleven_p = 3 or eleven_p = 4) and (thirteen_p = 5 or thirteen_p = 9)] ; for zone 1
+   [ ifelse any? patches with [ pcolor = red ]                                    ; to start, if there are not any red pixels, then we can start
+     [ask one-of patches in-radius 3  [ set pcolor yellow]]
+     [stop]
+
+
+
+   ]
+
+
+  let z1res a2 * Z1R
+  let z1com a2 * Z1C
+  let z1pubs a2 * Z1PS
+  let z1rec a2 * Z1RC
 
   show a2
   show z1res
+
+
  ]
 
-if (years = 2013)
-[stop]
-
+;if (years = 2013)
+;[stop]
+data
  set n1 n1 + 1 ]
 
      ]
@@ -491,7 +533,7 @@ Z1R
 Z1R
 0.35
 0.75
-0.6
+0.7
 0.05
 1
 NIL
@@ -521,7 +563,7 @@ Z1RC
 Z1RC
 0.00
 0.15
-0.15
+0
 0.05
 1
 NIL
@@ -545,8 +587,8 @@ HORIZONTAL
 PLOT
 5
 240
-500
-640
+235
+360
 plot 1
 ticks
 Develoed area
@@ -560,6 +602,76 @@ true
 PENS
 "c1" 1.0 2 -817084 true "" "plot count patches with [eleven_p = 1 or eleven_p = 2 or eleven_p = 3 or eleven_p = 4]plot c1"
 "n1" 1.0 0 -7500403 true "" "plot n1"
+
+PLOT
+255
+240
+455
+390
+plot 2
+NIL
+NIL
+0.0
+10.0
+0.0
+1.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot originalcongestionZ1"
+"pen-1" 1.0 0 -7500403 true "plot areaZ1" "plot congestionfactZ1"
+
+MONITOR
+250
+410
+437
+455
+NIL
+congest
+17
+1
+11
+
+PLOT
+5
+385
+195
+505
+Ticks/Year
+ticks
+years
+0.0
+600.0
+2010.0
+2040.0
+false
+false
+"" ""
+PENS
+"years" 1.0 1 -7500403 true "" "plot years"
+
+MONITOR
+90
+405
+145
+450
+NIL
+ticks
+17
+1
+11
+
+MONITOR
+40
+405
+90
+450
+NIL
+yearnumber
+17
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
