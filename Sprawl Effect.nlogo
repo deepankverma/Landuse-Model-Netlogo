@@ -56,7 +56,7 @@ to go
         turn-toward-attraction                   ; function which defines how seekers have to move forward.
         fd 1
         set patience-counter patience-counter - 1 ;reduces the patience counter as it moves forward.
-        set attraction attraction + .01           ; increasing attraction of every patch from where the seeker moves to 0.01.
+        set attraction attraction + 0.1           ; increasing attraction of every patch from where the seeker moves to 0.01.
       ]
     ]
 
@@ -65,8 +65,8 @@ to go
   [
 
     ifelse attraction <= (max-attraction * 2)    ;if attraction of particular patch is less than max-attraction which is user defined
-      [ set attraction attraction + .05 ]        ; it will be added 0.05 otherwise if attraction has exeeded, it will be awarded a zero and then that area is
-      [ set attraction 0 ]                       ; not attractive anymore unless other seeker come.
+      [ set attraction attraction + .5 ]        ; it will be added 0.05 otherwise if attraction has exeeded, it will be awarded a zero and then that area is
+      [ set shape "triangle" ]                       ; not attractive anymore unless other seeker come.
 
     set stay-counter stay-counter - 1            ; after seekers became houses, the stay-counter decreases with every tick
     if (stay-counter) <= 0                       ; if stay-counter becomes less than or equal to zero, houses will change to seekers again.
@@ -77,6 +77,13 @@ to go
     ]
   ]
   ask patches [ set pcolor scale-color green attraction 2.5 10 ]
+  let x count patches with [ attraction > 10 ]
+  show x
+
+  if  x > 500
+
+  [stop]
+
   tick
 end
 
@@ -106,11 +113,11 @@ end
 GRAPHICS-WINDOW
 225
 10
-695
-501
+935
+741
 17
 17
-13.143
+20.0
 1
 10
 1
@@ -203,7 +210,7 @@ seeker-search-angle
 seeker-search-angle
 1
 360
-360
+203
 1
 1
 NIL
@@ -218,7 +225,7 @@ population
 population
 1
 750
-337
+341
 1
 1
 NIL
@@ -233,7 +240,7 @@ seeker-patience
 seeker-patience
 0
 120
-13
+14
 1
 1
 NIL
@@ -248,7 +255,7 @@ wait-between-seeking
 wait-between-seeking
 5
 60
-5
+19
 1
 1
 NIL
