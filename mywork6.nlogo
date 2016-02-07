@@ -3,8 +3,8 @@ extensions [gis]
 ;extensions [csv]
 breed [data-points data-point]
 breed [centroids centroid]
-globals [lu lu1 one two three four five six seven seventwo eight nine ten eleven twelve thirteen fourteen suitab wards s1 a1 a2 csv c1 years filelist fileList1 xy Z1 Z2 Z3 Z4 Z5 Z6 Z7 Z8 Z9 Z10 Z11 Z12 Z13 Z14 W1  W2  W3  W4  W5  W6  W7  W8  W9  W10  W11  W12  W13  W14  W15  W16  W17  W18  W19  W20  W21  W22  W23  W24  W25  W26  W27  W28  W29  W30  W31  W32  W33  W34  W35  W36  W37  W38  W39  W40  W41  W42  W43  W44  W45  W46  W47  W48  W49  W50  W51  W52  W53  W54  W55  W56  W57  W58  W59  W60  W61  W62  W63  W64  W65  W66  W67  W68  W69  W70
-a i j k l n1 any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded areaZ1 congestionfactZ1 originalcongestionZ1  build-threshold ]
+globals [lu lu1 one two three four five six seven seventwo eight nine ten eleven twelve thirteen fourteen suitab wards s1 a1 a2 a3 csv c1 years filelist fileList1 xy Z1 Z1bf Z2 Z3 Z4 Z5 Z6 Z7 Z8 Z9 Z10 Z11 Z12 Z13 Z14 W1  W2  W3  W4  W5  W6  W7  W8  W9  W10  W11  W12  W13  W14  W15  W16  W17  W18  W19  W20  W21  W22  W23  W24  W25  W26  W27  W28  W29  W30  W31  W32  W33  W34  W35  W36  W37  W38  W39  W40  W41  W42  W43  W44  W45  W46  W47  W48  W49  W50  W51  W52  W53  W54  W55  W56  W57  W58  W59  W60  W61  W62  W63  W64  W65  W66  W67  W68  W69  W70
+a i j k l n1 any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded areaZ1 congestionfactZ1 originalcongestionZ1  build-threshold  ]
 
 breed [ houses house ]
 breed [ seekers seeker ]
@@ -177,13 +177,6 @@ to visualise
 end
 
 
-;to check
-;  ask turtles[
-;  if suitab_p > 6 and eleven_p = 2 [set shape "square" set color yellow]
-;  ]
-;
-;end
-
 to clear
  ; set fileList []
 
@@ -220,6 +213,8 @@ to openFile
   show mylist
       if x = 0 [ set Z1 mylist
                show Z1
+
+               set Z1bf but-first Z1
                ]
       if x = 1 [ set Z2 mylist
                ;show Z2
@@ -283,92 +278,49 @@ file-close
 end
 
 
-
-
 to evolveZ1
 
 reset-ticks
+setup1
 
- set years 2011
+ set years 2010
 
  ; let zone1 count patches with [eleven_p = 1 or eleven_p = 2 or eleven_p = 3 or eleven_p = 4] ; counting no. of pixels in Zone 1 which is collection of wards 1to 4
 
  ; show zone1
-  foreach  Z1 [set a1 ?  * c1
+  foreach  Z1 [   set a1 ?  * c1
  ; foreach  Z1 [let a1 ?          ; here for each years increase in built area is given
   ;show max Z1
 
-
-
  set a1 round(a1)
 
+    set years  years + 1  show years
 
+    show a1
 
- while [ n1 < a1]
- [ask one-of patches with [(eleven_p = 1 or eleven_p = 2 or eleven_p = 3 or eleven_p = 4) and (fourteen_p = 0)]
-   [ ifelse not any? patches with [ pcolor = red ]
-     [set pcolor red]
-     [ ask one-of patches in-radius 3  [ set pcolor red]
-   ]
+; show n1
 
-   ]
+go1
+;tick
 
-
-
-;  while [ (n1 < a1) ]            ; numbers entered to run the loop
-;  [ask one-of patches with [suitab_p > 6.5 and eleven_p = 1]       ; ask one of the patches is used as it will ask one patch at every time rather than all the patches in once
-;      [set pcolor yellow
-;        ;sprout 1
-;
-;      ]
-
-   ifelse (n1 + 1 = a1)          ; a1 changes as the it moves to second value in list, hence stop function is used to halt the process.
-   [ set years  years + 1  show years  ]
-
-   [ show a1]
-
- show n1
-
-
-tick
-
-if  ( years > 2011 )
+if  ( years = 2011 )
 
  [
-
-
-
    set a2 a1
 show a2
-   ;set a2 a2 + 1 - a1
-
-ask one-of patches with [(eleven_p = 1 or eleven_p = 2 or eleven_p = 3 or eleven_p = 4) and (thirteen_p = 5 or thirteen_p = 9)] ; for zone 1
-   [ ifelse any? patches with [ pcolor = red ]                                    ; to start, if there are not any red pixels, then we can start
-     [ask one-of patches in-radius 3  [ set pcolor yellow]]
-     [stop]
-
-
-
-   ]
-
-
-  let z1res a2 * Z1R
-  let z1com a2 * Z1C
-  let z1pubs a2 * Z1PS
-  let z1rec a2 * Z1RC
-
-  show a2
-  show z1res
-
 
  ]
 
-;if (years = 2013)
-;[stop]
-data
- set n1 n1 + 1 ]
+if  ( years > 2011 )
+[
+  set a3 a1
+  let a4 (a3 - a2)
+  show a4
 
-     ]
+]
+  ]
+;data
+ ;set n1 n1 + 1 ]
 
 end
 
@@ -389,10 +341,7 @@ to setup-patches
   ask patches with [suitab_p > 0]
 
   [
-
-
-
-    set pcolor scale-color green suitab_p 10 1  ; accordingly setting color gradient.
+    set pcolor scale-color green suitab_p 1 10  ; accordingly setting color gradient.
   ]
 end
 
@@ -404,7 +353,7 @@ to setup-turtles
     set patience-counter seeker-patience         ; The SEEKER-PATIENCE slider controls how long the seekers will search for high attraction squares before giving up and settling wherever they happen to be.
     set size 1                                   ; setting seeker size to 1 so that it covers whole patch.
   ]
-   ask turtles [ move-to one-of patches with [suitab_p > 5]  ]  ; asking the population variable to move to the patches with attraction greater than 2.5.
+   ask turtles [ move-to one-of patches with [suitab_p > 5]]  ; asking the population variable to move to the patches with attraction greater than 2.5.
 end
 
 to go1
@@ -448,9 +397,9 @@ to go1
   let x count patches with [ attraction > 10 ]
   show x
 
-  if  x > 500
-
-  [stop]
+;  if  x > 500
+;
+;  [stop]
 
   tick
 end
@@ -723,7 +672,7 @@ Z1C
 Z1C
 0.00
 0.10
-0.05
+0.01
 0.01
 1
 NIL
@@ -857,7 +806,7 @@ population
 population
 0
 700
-201
+531
 1
 1
 NIL
@@ -872,7 +821,7 @@ seeker-patience
 seeker-patience
 0
 60
-11
+17
 1
 1
 NIL
