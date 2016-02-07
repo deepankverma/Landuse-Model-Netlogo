@@ -461,9 +461,18 @@ to-report want-to-build?
 end
 
 to turn-toward-attraction
+  let loc [attraction] of patch-here
+  if (loc > 0) or (loc < 0)
+   [
   let ahead [attraction] of patch-ahead 1
+  if ahead <= 0
+  [stop]
   let myright [attraction] of patch-right-and-ahead seeker-search-angle 1
+  if myright <= 0
+  [stop]
   let myleft [attraction] of patch-left-and-ahead seeker-search-angle 1
+  if myleft <= 0
+  [stop]
   ifelse ((myright > ahead) and (myright > myleft))
   [
     rt random seeker-search-angle
@@ -472,6 +481,7 @@ to turn-toward-attraction
     if (myleft > ahead)
       [ lt random seeker-search-angle ]
   ]
+ ]
 end
 
 
@@ -523,24 +533,24 @@ end
 GRAPHICS-WINDOW
 515
 10
-1535
-651
-50
-30
-10.0
+1530
+796
+100
+75
+5.0
 1
 2
 1
 1
 1
 0
-0
-0
 1
--50
-50
--30
-30
+1
+1
+-100
+100
+-75
+75
 0
 0
 1
@@ -847,7 +857,7 @@ population
 population
 0
 700
-18
+201
 1
 1
 NIL
@@ -862,7 +872,7 @@ seeker-patience
 seeker-patience
 0
 60
-50
+11
 1
 1
 NIL
