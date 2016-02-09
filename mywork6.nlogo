@@ -4,7 +4,7 @@ extensions [gis]
 breed [data-points data-point]
 breed [centroids centroid]
 globals [lu lu1 one two three four five six seven seventwo eight nine ten eleven twelve thirteen fourteen fifteen suitab wards s1 a1 a2 a3 csv c1 years filelist fileList1 xy Z1 Z1bf Z2 Z3 Z4 Z5 Z6 Z7 Z8 Z9 Z10 Z11 Z12 Z13 Z14 W1  W2  W3  W4  W5  W6  W7  W8  W9  W10  W11  W12  W13  W14  W15  W16  W17  W18  W19  W20  W21  W22  W23  W24  W25  W26  W27  W28  W29  W30  W31  W32  W33  W34  W35  W36  W37  W38  W39  W40  W41  W42  W43  W44  W45  W46  W47  W48  W49  W50  W51  W52  W53  W54  W55  W56  W57  W58  W59  W60  W61  W62  W63  W64  W65  W66  W67  W68  W69  W70
-a i j k l n1 any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded areaZ1 congestionfactZ1 originalcongestionZ1  build-threshold ]
+a i j k l n1 any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded areaZ1 congestionfactZ1 originalcongestionZ1  build-threshold attract ]
 
 breed [ houses house ]
 breed [ seekers seeker ]
@@ -305,29 +305,13 @@ setup1
 
     show a1
 
-; show n1
+while [attract < a1]
+[go1]
 
-go1
-;tick
 
-if  ( years = 2011 )
 
- [
-   set a2 a1
-show a2
-
- ]
-
-if  ( years > 2011 )
-[
-  set a3 a1
-  let a4 (a3 - a2)
-  show a4
 
 ]
-  ]
-;data
- ;set n1 n1 + 1 ]
 
 end
 
@@ -404,9 +388,16 @@ to go1
   ]
   ask patches with [suitab_p > 0]
   [
-   set pcolor scale-color green attraction 2.5 10 ]
-  let x count patches with [ attraction > 10 ]
+   set pcolor scale-color green attraction 2.5 10
+   if (attraction > 20) and (attraction < 30)
+   [set pcolor orange]
+   if attraction > 30
+   [ set pcolor red]
+
+   ]
+  let x count patches with [ (attraction > 30) or (attraction = 30) ]
   show x
+  set attract x
 
 ;  if  x > 500
 ;
@@ -416,7 +407,9 @@ to go1
 end
 
 to-report want-to-build?
-  ifelse attraction1 > 7   ; 7 shows 1981 sprawl, it says to falsify the statement if seekers come over 1972 sprawl area.
+  if attract = a1
+  [ report FALSE]
+  ifelse attraction1 > 1   ; 7 shows 1981 sprawl, it says to falsify the statement if seekers come over 1972 sprawl area.
   [ report FALSE]
   [ report random attraction >= build-threshold or patience-counter = 0] ; reporting true or false based on the this code, which basically says if patch attraction no. is greater or patience for seeker has ended.
   ;or if not any? turtles-on patches
@@ -655,7 +648,7 @@ Z1PS
 Z1PS
 0.00
 0.15
-0.1
+0.05
 0.05
 1
 NIL
@@ -685,7 +678,7 @@ Z1C
 Z1C
 0.00
 0.10
-0.01
+0
 0.01
 1
 NIL
@@ -888,6 +881,24 @@ NIL
 NIL
 NIL
 1
+
+PLOT
+255
+560
+455
+710
+plot 3
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot  attract"
 
 @#$#@#$#@
 ## WHAT IS IT?
