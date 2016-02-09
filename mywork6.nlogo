@@ -4,7 +4,7 @@ extensions [gis]
 breed [data-points data-point]
 breed [centroids centroid]
 globals [lu lu1 one two three four five six seven seventwo eight nine ten eleven twelve thirteen fourteen fifteen suitab wards s1 a1 a2 a3 csv c1 years filelist fileList1 xy Z1 Z1bf Z2 Z3 Z4 Z5 Z6 Z7 Z8 Z9 Z10 Z11 Z12 Z13 Z14 W1  W2  W3  W4  W5  W6  W7  W8  W9  W10  W11  W12  W13  W14  W15  W16  W17  W18  W19  W20  W21  W22  W23  W24  W25  W26  W27  W28  W29  W30  W31  W32  W33  W34  W35  W36  W37  W38  W39  W40  W41  W42  W43  W44  W45  W46  W47  W48  W49  W50  W51  W52  W53  W54  W55  W56  W57  W58  W59  W60  W61  W62  W63  W64  W65  W66  W67  W68  W69  W70
-a i j k l n1 any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded areaZ1 congestionfactZ1 originalcongestionZ1  build-threshold  ]
+a i j k l n1 any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded areaZ1 congestionfactZ1 originalcongestionZ1  build-threshold ]
 
 breed [ houses house ]
 breed [ seekers seeker ]
@@ -13,7 +13,7 @@ houses-own [ stay-counter ]
 seekers-own [ patience-counter ]
 
 turtles-own [lu_t ]
-patches-own [lu_p one_p two_p three_p four_p five_p six_p sevenone_p seventwo_p eight_p ten_p eleven_p twelve_p thirteen_p suitab_p fourteen_p fifteen_p attraction ]
+patches-own [lu_p one_p two_p three_p four_p five_p six_p sevenone_p seventwo_p eight_p ten_p eleven_p twelve_p thirteen_p suitab_p fourteen_p fifteen_p attraction attraction1]
 
 to setup
   clear-all
@@ -123,15 +123,6 @@ to classify1 ;just to test the assignment of shapes
   ]
 end
 
-to showthis
-  let gfif gis:raster-value fifteen -15 18
-
-  show gfif
-
-end
-
-
-
 
 to suitability
 
@@ -154,8 +145,8 @@ repeat (gis:width-of seven)
     let gseo gis:raster-value seven x y
     let ge gis:raster-value eight x y
     let gn gis:raster-value nine x y
-    let gfif gis:raster-value fifteen x y
-    let s2 (go * 0.10) + (gt * 0.10) + (gth * 0.05) + (gf * 0.05) +  (gfi * 0.15) + (gs *  0.15) + (gseo * 0.15) + (ge * 0.15) + (gn * 0.10) + (gfif * 0.25)
+    ;let gfif gis:raster-value fifteen x y
+    let s2 (go * 0.10) + (gt * 0.10) + (gth * 0.05) + (gf * 0.05) +  (gfi * 0.15) + (gs *  0.15) + (gseo * 0.15) + (ge * 0.15) + (gn * 0.10); + (gfif * 0.25)
     set s1 s2
 
     gis:set-raster-value suitab x y s1 ; sets the value of given raster dataset at the given cell to a new value
@@ -164,7 +155,7 @@ repeat (gis:width-of seven)
   set y y + 1 ]
  set x x + 1 ]
 
-gis:paint suitab 150
+;gis:paint suitab 150
 
 end
 
@@ -175,17 +166,19 @@ to visualise
   ]
   gis:apply-raster suitab suitab_p ; convert raster data into patch variable
   gis:apply-raster twelve twelve_p
+  gis:apply-raster fifteen fifteen_p
 
 
 
 
   ask patches [
 
-;    sprout 1]
-;
-;  ask turtles[
-  ;set shape "circle" set color grey
- ; if fourteen_p = 0  [ set pcolor green ]   ; works in 5 to 7.5
+  if fifteen_p = 9  [ set pcolor blue ]
+  if fifteen_p = 7  [ set pcolor red ]
+  if fifteen_p = 5  [ set pcolor green ]
+  if fifteen_p = 3  [ set pcolor cyan ]
+  if fifteen_p = 1  [ set pcolor yellow ]
+
   ;if eleven_p = 2  [set shape "circle" set color yellow]
   ]
 end
@@ -343,19 +336,23 @@ to setup1
 
   setup-patches
   setup-turtles
-  set build-threshold floor (max-attraction / 2)   ; step 5 where seeker decides whether or not to settle at particular patch.
+  ;gis:apply-raster suitab attraction
+  set build-threshold  floor (max-attraction / 2)   ; step 5 where seeker decides whether or not to settle at particular patch.
+
   reset-ticks
 end
 
 to setup-patches
 
-; gis:apply-raster suitab suitab_p
+ gis:apply-raster suitab suitab_p
 ;gis:paint suitab 150
+  gis:apply-raster fifteen attraction1
   gis:apply-raster suitab attraction
+
   ask patches with [suitab_p > 0]
 
   [
-    set pcolor scale-color green suitab_p 1 10  ; accordingly setting color gradient.
+    set pcolor scale-color red suitab_p 1 10  ; accordingly setting color gradient.
   ]
 end
 
@@ -367,7 +364,7 @@ to setup-turtles
     set patience-counter seeker-patience         ; The SEEKER-PATIENCE slider controls how long the seekers will search for high attraction squares before giving up and settling wherever they happen to be.
     set size 1                                   ; setting seeker size to 1 so that it covers whole patch.
   ]
-   ask turtles [ move-to one-of patches with [suitab_p > 5]]  ; asking the population variable to move to the patches with attraction greater than 2.5.
+   ask turtles [ move-to one-of patches with [attraction1 = 9]]  ; asking the population variable to move to the patches with attraction greater than 2.5.
 end
 
 to go1
@@ -419,7 +416,9 @@ to go1
 end
 
 to-report want-to-build?
-  report random attraction >= build-threshold or patience-counter = 0 ; reporting true or false based on the this code, which basically says if patch attraction no. is greater or patience for seeker has ended.
+  ifelse attraction1 > 7   ; 7 shows 1981 sprawl, it says to falsify the statement if seekers come over 1972 sprawl area.
+  [ report FALSE]
+  [ report random attraction >= build-threshold or patience-counter = 0] ; reporting true or false based on the this code, which basically says if patch attraction no. is greater or patience for seeker has ended.
   ;or if not any? turtles-on patches
 end
 
@@ -428,14 +427,14 @@ to turn-toward-attraction
   if (loc > 0) or (loc < 0)
    [
   let ahead [attraction] of patch-ahead 1
-  if ahead <= 0
-  [stop]
+  if not ( (ahead <= 0) or (ahead >= 0) )
+  [lt random 180]
   let myright [attraction] of patch-right-and-ahead seeker-search-angle 1
-  if myright <= 0
-  [stop]
+  if not ( (myright <= 0) or (myright >= 0) )
+  [lt random 180]
   let myleft [attraction] of patch-left-and-ahead seeker-search-angle 1
-  if myleft <= 0
-  [stop]
+  if not ( (myleft <= 0) or (myleft >= 0) )
+  [lt random 180]
   ifelse ((myright > ahead) and (myright > myleft))
   [
     rt random seeker-search-angle
@@ -496,11 +495,11 @@ end
 GRAPHICS-WINDOW
 520
 15
-1535
-801
+2540
+1556
 100
 75
-5.0
+10.0
 1
 2
 1
@@ -641,7 +640,7 @@ Z1R
 Z1R
 0.35
 0.75
-0.7
+0.75
 0.05
 1
 NIL
@@ -656,7 +655,7 @@ Z1PS
 Z1PS
 0.00
 0.15
-0.05
+0.1
 0.05
 1
 NIL
@@ -783,26 +782,11 @@ yearnumber
 
 SLIDER
 265
-20
+55
 437
-53
+88
 max-attraction
 max-attraction
-0
-15
-15
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-265
-60
-437
-93
-smoothness
-smoothness
 0
 15
 15
@@ -820,7 +804,7 @@ population
 population
 0
 700
-531
+526
 1
 1
 NIL
@@ -834,8 +818,8 @@ SLIDER
 seeker-patience
 seeker-patience
 0
-60
-17
+100
+89
 1
 1
 NIL
@@ -850,7 +834,7 @@ wait-between-seeking
 wait-between-seeking
 0
 20
-5
+20
 1
 1
 NIL
@@ -865,7 +849,7 @@ seeker-search-angle
 seeker-search-angle
 0
 360
-60
+360
 1
 1
 NIL
