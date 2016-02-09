@@ -3,7 +3,7 @@ extensions [gis]
 ;extensions [csv]
 breed [data-points data-point]
 breed [centroids centroid]
-globals [lu lu1 one two three four five six seven seventwo eight nine ten eleven twelve thirteen fourteen suitab wards s1 a1 a2 a3 csv c1 years filelist fileList1 xy Z1 Z1bf Z2 Z3 Z4 Z5 Z6 Z7 Z8 Z9 Z10 Z11 Z12 Z13 Z14 W1  W2  W3  W4  W5  W6  W7  W8  W9  W10  W11  W12  W13  W14  W15  W16  W17  W18  W19  W20  W21  W22  W23  W24  W25  W26  W27  W28  W29  W30  W31  W32  W33  W34  W35  W36  W37  W38  W39  W40  W41  W42  W43  W44  W45  W46  W47  W48  W49  W50  W51  W52  W53  W54  W55  W56  W57  W58  W59  W60  W61  W62  W63  W64  W65  W66  W67  W68  W69  W70
+globals [lu lu1 one two three four five six seven seventwo eight nine ten eleven twelve thirteen fourteen fifteen suitab wards s1 a1 a2 a3 csv c1 years filelist fileList1 xy Z1 Z1bf Z2 Z3 Z4 Z5 Z6 Z7 Z8 Z9 Z10 Z11 Z12 Z13 Z14 W1  W2  W3  W4  W5  W6  W7  W8  W9  W10  W11  W12  W13  W14  W15  W16  W17  W18  W19  W20  W21  W22  W23  W24  W25  W26  W27  W28  W29  W30  W31  W32  W33  W34  W35  W36  W37  W38  W39  W40  W41  W42  W43  W44  W45  W46  W47  W48  W49  W50  W51  W52  W53  W54  W55  W56  W57  W58  W59  W60  W61  W62  W63  W64  W65  W66  W67  W68  W69  W70
 a i j k l n1 any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded areaZ1 congestionfactZ1 originalcongestionZ1  build-threshold  ]
 
 breed [ houses house ]
@@ -13,7 +13,7 @@ houses-own [ stay-counter ]
 seekers-own [ patience-counter ]
 
 turtles-own [lu_t ]
-patches-own [lu_p one_p two_p three_p four_p five_p six_p sevenone_p seventwo_p eight_p ten_p eleven_p twelve_p thirteen_p suitab_p fourteen_p attraction ]
+patches-own [lu_p one_p two_p three_p four_p five_p six_p sevenone_p seventwo_p eight_p ten_p eleven_p twelve_p thirteen_p suitab_p fourteen_p fifteen_p attraction ]
 
 to setup
   clear-all
@@ -33,13 +33,14 @@ to setup
   set twelve gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/croplandas.asc"
   set thirteen gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/undevas.asc"
   set fourteen gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/developas.asc"
+  set fifteen gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/sprawlaras.asc"
 
 
 
 
   set suitab gis:create-raster gis:width-of lu gis:height-of lu gis:envelope-of lu
 
-;set eleven gis:create-raster gis:width-of lu gis:height-of lu gis:envelope-of lu
+ ; set fifteen gis:create-raster gis:width-of lu gis:height-of lu gis:envelope-of lu
  ;set twelve gis:create-raster gis:width-of lu gis:height-of lu gis:envelope-of lu
 
 
@@ -58,10 +59,12 @@ to setup
                                                 (gis:envelope-of eleven)
                                                 (gis:envelope-of twelve)
                                                 (gis:envelope-of thirteen)
-                                                (gis:envelope-of fourteen))
+                                                (gis:envelope-of fourteen)
+                                                (gis:envelope-of fifteen))
 
- ; gis:paint four 150  ;to color the raster or the shapefile.
 
+ ; gis:paint fifteen 150  ;to color the raster or the shapefile.
+ ; gis:paint two 150
 ;  set a gis:width-of one
 ;  print a
 end
@@ -120,6 +123,15 @@ to classify1 ;just to test the assignment of shapes
   ]
 end
 
+to showthis
+  let gfif gis:raster-value fifteen -15 18
+
+  show gfif
+
+end
+
+
+
 
 to suitability
 
@@ -128,7 +140,7 @@ to suitability
 
 
 let x 0
-repeat (gis:width-of one)
+repeat (gis:width-of seven)
 [ let y 0
   repeat (gis:height-of seven)
 
@@ -141,7 +153,9 @@ repeat (gis:width-of one)
     let gs gis:raster-value six x y
     let gseo gis:raster-value seven x y
     let ge gis:raster-value eight x y
-    let s2 (go * 0.2034) + (gt * 0.1767) + (gth * 0.0774) + (gf * 0.1314) +  (gfi * 0.1108) + (gs *  0.0668) + (ge * 0.0642) + (gseo * 0.1568) ;+ gset + (gfi * 0.1108)
+    let gn gis:raster-value nine x y
+    let gfif gis:raster-value fifteen x y
+    let s2 (go * 0.10) + (gt * 0.10) + (gth * 0.05) + (gf * 0.05) +  (gfi * 0.15) + (gs *  0.15) + (gseo * 0.15) + (ge * 0.15) + (gn * 0.10) + (gfif * 0.25)
     set s1 s2
 
     gis:set-raster-value suitab x y s1 ; sets the value of given raster dataset at the given cell to a new value
@@ -150,7 +164,7 @@ repeat (gis:width-of one)
   set y y + 1 ]
  set x x + 1 ]
 
-;gis:paint suitab 150
+gis:paint suitab 150
 
 end
 
@@ -480,10 +494,10 @@ ask patches [
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-515
-10
-1530
-796
+520
+15
+1535
+801
 100
 75
 5.0
