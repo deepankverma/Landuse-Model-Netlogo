@@ -3,8 +3,8 @@ extensions [gis]
 ;extensions [csv]
 breed [data-points data-point]
 breed [centroids centroid]
-globals [lu lu1 one two three four five six seven seventwo eight nine ten eleven twelve thirteen fourteen fifteen sixteen suitab wards s1 a1 a2 a3 csv c1 years filelist fileList1 xy Z1 Z1bf Z2 Z3 Z4 Z5 Z6 Z7 Z8 Z9 Z10 Z11 Z12 Z13 Z14 W1  W2  W3  W4  W5  W6  W7  W8  W9  W10  W11  W12  W13  W14  W15  W16  W17  W18  W19  W20  W21  W22  W23  W24  W25  W26  W27  W28  W29  W30  W31  W32  W33  W34  W35  W36  W37  W38  W39  W40  W41  W42  W43  W44  W45  W46  W47  W48  W49  W50  W51  W52  W53  W54  W55  W56  W57  W58  W59  W60  W61  W62  W63  W64  W65  W66  W67  W68  W69  W70
-a i j k l n1 any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded areaZ1 congestionfactZ1 originalcongestionZ1  build-threshold attract ]
+globals [lu lu1 one two three four five six seven seventwo eight nine ten eleven twelve thirteen fourteen fifteen sixteen suitab wards s1 a1 a2 a3 adv csv c1 years xlfile filelist fileList1 xy Z1 Z1bf Z2 Z3 Z4 Z5 Z6 Z7 Z8 Z9 Z10 Z11 Z12 Z13 Z14 W1  W2  W3  W4  W5  W6  W7  W8  W9  W10  W11  W12  W13  W14  W15  W16  W17  W18  W19  W20  W21  W22  W23  W24  W25  W26  W27  W28  W29  W30  W31  W32  W33  W34  W35  W36  W37  W38  W39  W40  W41  W42  W43  W44  W45  W46  W47  W48  W49  W50  W51  W52  W53  W54  W55  W56  W57  W58  W59  W60  W61  W62  W63  W64  W65  W66  W67  W68  W69  W70
+a i j k l n1 any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded areaZ1 congestionfactZ1 originalcongestionZ1 mylist  build-threshold attract ]
 
 breed [ houses house ]
 breed [ seekers seeker ]
@@ -18,16 +18,17 @@ patches-own [lu_p one_p two_p three_p four_p five_p six_p sevenone_p seventwo_p 
 to setup
   clear-all
   set lu gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/reforestas.asc"
-  set one gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/reforestas.asc"
+
   ;gis:set-world-envelope gis:envelope-of lu
-  set two gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/resoildas.asc"
-  set three gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/resoileas.asc"
-  set four gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/resoiltas.asc"
-  set five gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/regwprosas.asc"
-  set six gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/relvalueas.asc"
-  set seven gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/reensenstias.asc"
-  set eight gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/reslopeas.asc"
-  set nine gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/refloodhas.asc"
+  set one gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/resoildas.asc"
+  set two gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/resoileas.asc"
+  set three gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/resoiltas.asc"
+  set four gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/regwprosas.asc"
+  set five gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/relvalueas.asc"
+  set six gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/reensenstias.asc"
+  set seven gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/reslopeas.asc"
+  set eight gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/refloodhas.asc"
+  set nine gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/reforestas.asc"
   set ten gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/mergebarrasas.asc"
   set eleven gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/wardmapas.asc"
   set twelve gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/croplandas.asc"
@@ -81,9 +82,9 @@ to classify
   gis:apply-raster fourteen fourteen_p
   gis:apply-raster thirteen thirteen_p
   gis:apply-raster sixteen sixteen_p
-show count patches with [eleven_p = 1 or eleven_p = 2 or eleven_p = 3 or eleven_p = 4]
-
-set c1 (count patches with [eleven_p = 1 or eleven_p = 2 or eleven_p = 3 or eleven_p = 4] / 2413.425)   ; unitary method is applied here, which shows how much patches in 1 ha of area is present. Necessary if the extent of model is changed.
+let p count patches with [eleven_p > 0]
+show p
+set c1 (p / 10033.74)   ; unitary method is applied here, which shows how much patches in 1 ha of area is present. Necessary if the extent of model is changed.
 show c1
 
 
@@ -128,24 +129,59 @@ end
 
 
 to check
-
-
-
-
-to manualoverride
-
-  gis:apply-raster sixteen sixteen_p
   ask patches [
-  if sixteen_p = 9 [set sixteen_p mo1]
-  if sixteen_p = 7 [set sixteen_p mo2]
-  if sixteen_p = 5 [set sixteen_p mo3]
-  if sixteen_p = 3 [set sixteen_p mo4]
-  if sixteen_p = 1 [set sixteen_p mo5]
-  if sixteen_p = 0 [set sixteen_p mo0]
+  if sixteen_p = 9 [set pcolor blue]
+  if sixteen_p = 7 [set pcolor red]
+  if sixteen_p = 5 [set pcolor green]
+  if sixteen_p = 3 [set pcolor orange]
+  if sixteen_p = 1 [set pcolor pink]
+  if sixteen_p = 0 [set pcolor cyan]
   ]
 
 
 end
+
+
+to manualoverride
+
+
+
+  if ((mo1 + mo2 + mo3 + mo4 + mo5 + mo0) < 26)
+  [ask patches [
+
+  ifelse sixteen_p = 0
+  [set sixteen_p mo0]
+  [ifelse sixteen_p = 9
+    [set sixteen_p mo1]
+    [ifelse sixteen_p = 7
+       [set sixteen_p mo2]
+       [ifelse sixteen_p = 5
+         [set sixteen_p mo3]
+         [ifelse sixteen_p = 3
+           [set sixteen_p mo4]
+           [if sixteen_p = 1 [set sixteen_p mo5]
+
+  ]]]]]
+  ]]
+
+end
+
+to postcheck
+
+
+  ask patches [
+
+  if sixteen_p = 9 [set pcolor blue]
+  if sixteen_p = 7 [set pcolor red]
+  if sixteen_p = 5 [set pcolor green]
+  if sixteen_p = 3 [set pcolor orange]
+  if sixteen_p = 1 [set pcolor pink]
+  if sixteen_p = 0 [set pcolor cyan]
+  ]
+
+
+end
+
 
 
 to suitability
@@ -170,12 +206,14 @@ repeat (gis:width-of seven)
     let ge gis:raster-value eight x y
     let gn gis:raster-value nine x y
     ;let gfif gis:raster-value fifteen x y
-    let s2 (go * 0.10) + (gt * 0.10) + (gth * 0.05) + (gf * 0.05) +  (gfi * 0.15) + (gs *  0.15) + (gseo * 0.15) + (ge * 0.15) + (gn * 0.10); + (gfif * 0.25)
+  ;  while [(uls1 + uls2 + uls3 + uls4 + uls5 + uls6 + uls7 + uls8 + uls9) = 1]
+  ;[
+      let s2 (go * uls1) + (gt * uls2) + (gth * uls3) + (gf * uls4) +  (gfi * uls5) + (gs *  uls6) + (gseo * uls7) + (ge * uls8) + (gn * uls9)
     set s1 s2
 
     gis:set-raster-value suitab x y s1 ; sets the value of given raster dataset at the given cell to a new value
     ; gis:set-raster-value RasterDataset x y value
-
+  ;]
   set y y + 1 ]
  set x x + 1 ]
 
@@ -192,18 +230,19 @@ to visualise
   gis:apply-raster twelve twelve_p
   gis:apply-raster fifteen fifteen_p
 
-
-
-
   ask patches [
 
-  if fifteen_p = 9  [ set pcolor blue ]
-  if fifteen_p = 7  [ set pcolor red ]
-  if fifteen_p = 5  [ set pcolor green ]
-  if fifteen_p = 3  [ set pcolor cyan ]
-  if fifteen_p = 1  [ set pcolor yellow ]
+  ifelse suitab_p > 5.5
+  [ set pcolor blue ]
+  [ ifelse (suitab_p > 4.5 and suitab_p < 5.5)
+    [ set pcolor red ]
+    [ ifelse (suitab_p > 3.5 and suitab_p < 4.5)
+      [ set pcolor green ]
+      [ ifelse (suitab_p > 2.5 and suitab_p < 3.5)
+        [ set pcolor cyan ]
+        [ set pcolor yellow ]
 
-  ;if eleven_p = 2  [set shape "circle" set color yellow]
+  ]]]
   ]
 end
 
@@ -214,17 +253,15 @@ to clear
 end
 
 to openFile
-  let x 0
-  repeat 14
-  [
+
   set fileList []
  ; set fileList1 []
-  file-open "built.csv"
+  file-open "builttotal.csv"
   set csv file-read-line ; reads line and report it as a string
   set csv word csv "," ;  word value1 value2 ,concatenates the inputs together and reports the result as a string
  ; show csv ; shows the first whole line of values with commas "33679,67627,29048,31176,37079,28337,30456," followed by comma at the end.
 
-  let mylist []
+  set mylist []
   while [not empty? csv]
   [
     let $x position "," csv  ; position string1 string2 reports the first position of string1, here position  of "," is 6th starting from 0, so shown as 5.
@@ -241,68 +278,12 @@ to openFile
     ;show csv
   ]
   ;set fileList lput mylist fileList
-  show mylist
-      if x = 0 [ set Z1 mylist
-               show Z1
+ show mylist
 
-               set Z1bf but-first Z1
-               ]
-      if x = 1 [ set Z2 mylist
-               ;show Z2
-               ]
-      if x = 2 [ set Z3 mylist
-               ;show Z3
-               ]
-      if x = 3 [ set Z4 mylist
-               ;show Z4
-               ]
-      if x = 4 [ set Z5 mylist
-               ;show Z5
-               ]
-      if x = 5 [ set Z6 mylist
-               ;show Z6
-               ]
-      if x = 6 [ set Z7 mylist
-               ;show Z7
-               ]
-      if x = 7 [ set Z8 mylist
-               ;show Z8
-               ]
-      if x = 8 [ set Z9 mylist
-               ;show Z9
-               ]
-      if x = 9 [ set Z10 mylist
-               ;show Z10
-               ]
-      if x = 10 [ set Z11 mylist
-               ;show Z11
-               ]
-      if x = 11 [ set Z12 mylist
-               ;show Z12
-               ]
-      if x = 12 [ set Z13 mylist
-               ;show Z13
-               ]
-      if x = 13 [ set Z14 mylist
-               ;show Z14
-               ]
- set x x + 1
-  ]
-  ;show fileList1
- show Z1
- show Z2
- show Z3
- show Z4
- show Z5
- show Z6
- show Z7
- show Z8
- show Z9
- show Z10
- show Z11
- show Z12
- show Z13
- show Z14
+
+
+
+
 
 file-close
 
@@ -319,9 +300,11 @@ setup1
  ; let zone1 count patches with [eleven_p = 1 or eleven_p = 2 or eleven_p = 3 or eleven_p = 4] ; counting no. of pixels in Zone 1 which is collection of wards 1to 4
 
  ; show zone1
-  foreach  Z1 [   set a1 ?  * c1
+  foreach  mylist [   set a1 ?  * c1
  ; foreach  Z1 [let a1 ?          ; here for each years increase in built area is given
   ;show max Z1
+  if years = 2010
+  [ set adv a1 ]
 
  set a1 round(a1)
 
@@ -420,8 +403,9 @@ to go1
 
    ]
   let x count patches with [ (attraction > 30) or (attraction = 30) ]
-  show x
-  set attract x
+
+  set attract x + adv
+  show attract
 
 ;  if  x > 500
 ;
@@ -587,10 +571,10 @@ NIL
 1
 
 BUTTON
-5
-70
-82
-103
+210
+20
+287
+53
 NIL
 visualise
 NIL
@@ -605,9 +589,9 @@ NIL
 
 BUTTON
 5
-120
+70
 82
-153
+103
 NIL
 openFile
 NIL
@@ -622,9 +606,9 @@ NIL
 
 BUTTON
 5
-285
+115
 87
-318
+148
 NIL
 evolveZ1
 NIL
@@ -639,9 +623,9 @@ NIL
 
 PLOT
 5
-475
+160
 195
-595
+280
 Ticks/Year
 ticks
 years
@@ -657,9 +641,9 @@ PENS
 
 MONITOR
 90
-495
+180
 145
-540
+225
 NIL
 ticks
 17
@@ -667,10 +651,10 @@ ticks
 11
 
 MONITOR
-40
-495
-90
-540
+35
+180
+85
+225
 NIL
 yearnumber
 17
@@ -678,10 +662,10 @@ yearnumber
 11
 
 SLIDER
-220
-600
-392
-633
+5
+475
+177
+508
 max-attraction
 max-attraction
 0
@@ -693,10 +677,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-220
-640
-392
-673
+5
+515
+177
+548
 population
 population
 0
@@ -708,10 +692,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-220
-680
-392
-713
+5
+555
+177
+588
 seeker-patience
 seeker-patience
 0
@@ -723,10 +707,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-220
-715
-392
-748
+5
+590
+177
+623
 wait-between-seeking
 wait-between-seeking
 0
@@ -738,10 +722,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-220
-750
-392
-783
+5
+625
+177
+658
 seeker-search-angle
 seeker-search-angle
 0
@@ -752,46 +736,12 @@ seeker-search-angle
 NIL
 HORIZONTAL
 
-BUTTON
-10
-215
-77
-248
-NIL
-setup1
-NIL
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
-BUTTON
-90
-215
-153
-248
-NIL
-go1
-T
-1
-T
-OBSERVER
-NIL
-NIL
-NIL
-NIL
-1
-
 PLOT
 5
-600
+285
 205
-750
-plot 3
+435
+No.of Patches Built
 NIL
 NIL
 0.0
@@ -805,35 +755,35 @@ PENS
 "default" 1.0 0 -16777216 true "" "plot  attract"
 
 TEXTBOX
-285
-30
-435
-48
-MANUAL OVERRIDE FACTORS
-11
-0.0
+320
+10
+470
+40
+MANUAL OVERRIDE FACTORS FOR SPRAWL
+12
+95.0
 1
 
 SLIDER
-285
-45
-457
-78
+315
+50
+487
+83
 mo1
 mo1
 0
 9
-9
+0
 1
 1
 NIL
 HORIZONTAL
 
 SLIDER
-285
-85
-457
-118
+315
+90
+487
+123
 mo2
 mo2
 0
@@ -845,10 +795,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-285
-120
-457
-153
+315
+125
+487
+158
 mo3
 mo3
 0
@@ -860,10 +810,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-285
-155
-457
-188
+315
+160
+487
+193
 mo4
 mo4
 0
@@ -875,10 +825,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-285
-190
-457
-223
+315
+195
+487
+228
 mo5
 mo5
 0
@@ -890,16 +840,232 @@ NIL
 HORIZONTAL
 
 SLIDER
-285
-225
-457
-258
+315
+230
+487
+263
 mo0
 mo0
 0
 9
+9
+1
+1
+NIL
+HORIZONTAL
+
+BUTTON
+315
+270
+378
+303
+NIL
+check
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+380
+270
+497
+303
+NIL
+manualoverride
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+315
+305
+402
+338
+NIL
+postcheck
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+TEXTBOX
+40
+455
+190
+473
+SEEKER BEHAVIOURS
+12
+95.0
+1
+
+TEXTBOX
+315
+345
+465
+405
+MANUAL OVERRIDE FACTORS FOR UNDEVELOPED LAND SUITABILITY
+12
+95.0
+1
+
+TEXTBOX
+315
+410
+460
+550
+1. SOIL DEPTH\n2. SOIL EROSION\n3. SOIL TEXTURE\n4. GROUNDWATER PROS.\n5. LAND VALUE\n6. ENVIR. SENSITIVITY\n7. SLOPE PERCENTAGE\n8. FLOOD HAZARD\n9. FOREST AREAS\n
+12
+0.0
+1
+
+SLIDER
+315
+555
+407
+588
+uls1
+uls1
 0
 1
+0.1
+0.01
+1
+NIL
+HORIZONTAL
+
+SLIDER
+410
+555
+502
+588
+uls2
+uls2
+0
+1
+0.05
+0.01
+1
+NIL
+HORIZONTAL
+
+SLIDER
+315
+590
+407
+623
+uls3
+uls3
+0
+1
+0.05
+0.05
+1
+NIL
+HORIZONTAL
+
+SLIDER
+410
+590
+502
+623
+uls4
+uls4
+0
+1
+0.1
+0.01
+1
+NIL
+HORIZONTAL
+
+SLIDER
+315
+625
+407
+658
+uls5
+uls5
+0
+1
+0.15
+0.01
+1
+NIL
+HORIZONTAL
+
+SLIDER
+410
+625
+502
+658
+uls6
+uls6
+0
+1
+0.05
+0.01
+1
+NIL
+HORIZONTAL
+
+SLIDER
+315
+660
+407
+693
+uls7
+uls7
+0
+1
+0.15
+0.01
+1
+NIL
+HORIZONTAL
+
+SLIDER
+410
+660
+502
+693
+uls8
+uls8
+0
+1
+0.05
+0.01
+1
+NIL
+HORIZONTAL
+
+SLIDER
+315
+695
+500
+728
+uls9
+uls9
+0
+1
+0.3
+0.01
 1
 NIL
 HORIZONTAL
