@@ -1,16 +1,15 @@
 extensions [csv]
 extensions [gis]
-;extensions [csv]
 breed [data-points data-point]
 breed [centroids centroid]
 globals [lu lu1 one two three four five six seven seventwo eight nine ten eleven twelve thirteen fourteen fifteen sixteen suitab wards s1 a1 a2 a3 adv csv c1 years xlfile filelist fileList1 xy Z1 Z1bf Z2 Z3 Z4 Z5 Z6 Z7 Z8 Z9 Z10 Z11 Z12 Z13 Z14 W1  W2  W3  W4  W5  W6  W7  W8  W9  W10  W11  W12  W13  W14  W15  W16  W17  W18  W19  W20  W21  W22  W23  W24  W25  W26  W27  W28  W29  W30  W31  W32  W33  W34  W35  W36  W37  W38  W39  W40  W41  W42  W43  W44  W45  W46  W47  W48  W49  W50  W51  W52  W53  W54  W55  W56  W57  W58  W59  W60  W61  W62  W63  W64  W65  W66  W67  W68  W69  W70
-a i j k l n1 any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded areaZ1 congestionfactZ1 originalcongestionZ1 mylist  build-threshold attract ]
+a i j k l n1 any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded areaZ1 congestionfactZ1 originalcongestionZ1 mylist attractx build-threshold attract z1a z2a z3a z4a z5a z6a z7a z8a z9a z10a z11a z12a z13a z14a ]
 
 breed [ houses house ]
-breed [ seekers seeker ]
+breed [ agents agent ]
 
 houses-own [ stay-counter ]
-seekers-own [ patience-counter ]
+agents-own [ patience-counter ]
 
 turtles-own [lu_t ]
 patches-own [lu_p one_p two_p three_p four_p five_p six_p sevenone_p seventwo_p eight_p ten_p eleven_p twelve_p thirteen_p suitab_p fourteen_p fifteen_p sixteen_p attraction attraction1]
@@ -106,11 +105,30 @@ to-report congest
 
 end
 
+to-report zonewise
+
+
+
+  report z1a + z2a + z3a + z4a + z5a + z6a + z7a + z8a + z9a + z10a + z11a + z12a + z13a + z14a
+
+
+
+end
+
 to-report yearnumber
 
   report years
 
 end
+
+
+to-report attract1
+
+  report attractx
+
+end
+
+
 
 to classify1 ;just to test the assignment of shapes
 
@@ -232,18 +250,21 @@ to visualise
 
   ask patches [
 
-  ifelse suitab_p > 5.5
+
+  ifelse suitab_p > 7.5
+  [set pcolor pink]
+  [ifelse (suitab_p > 6.5 and suitab_p < 7.5)
   [ set pcolor blue ]
-  [ ifelse (suitab_p > 4.5 and suitab_p < 5.5)
+  [ ifelse (suitab_p > 5.5 and suitab_p < 6.5)
     [ set pcolor red ]
-    [ ifelse (suitab_p > 3.5 and suitab_p < 4.5)
+    [ ifelse (suitab_p > 4.5 and suitab_p < 5.5)
       [ set pcolor green ]
-      [ ifelse (suitab_p > 2.5 and suitab_p < 3.5)
+      [ ifelse (suitab_p > 3.5 and suitab_p < 4.5)
         [ set pcolor cyan ]
-        [ set pcolor yellow ]
+        [ set pcolor black ]
 
   ]]]
-  ]
+  ]]
 end
 
 
@@ -304,9 +325,9 @@ setup1
  ; foreach  Z1 [let a1 ?          ; here for each years increase in built area is given
   ;show max Z1
   if years = 2010
-  [ set adv a1 ]
+  [ set adv round(a1) ]
 
- set a1 round(a1)
+ ;set a1 round(a1)
 
     set years  years + 1  show years
 
@@ -328,7 +349,7 @@ to setup1
   setup-patches
   setup-turtles
   ;gis:apply-raster suitab attraction
-  set build-threshold  floor (max-attraction / 2)   ; step 5 where seeker decides whether or not to settle at particular patch.
+  set build-threshold  floor (max-attraction / 2)   ; step 5 where agent decides whether or not to settle at particular patch.
 
   reset-ticks
 end
@@ -337,7 +358,7 @@ to setup-patches
 
  gis:apply-raster suitab suitab_p
 ;gis:paint suitab 150
-  gis:apply-raster fifteen attraction1
+  gis:apply-raster sixteen attraction1
   gis:apply-raster suitab attraction
 
   ask patches with [suitab_p > 0]
@@ -348,32 +369,32 @@ to setup-patches
 end
 
 to setup-turtles
-  create-seekers population                      ; seekers are one of the two states of agent in this model.
+  create-agents population                      ; agents are one of the two states of agent in this model.
   [
     set color blue
     set shape "default"
-    set patience-counter seeker-patience         ; The SEEKER-PATIENCE slider controls how long the seekers will search for high attraction squares before giving up and settling wherever they happen to be.
-    set size 1                                   ; setting seeker size to 1 so that it covers whole patch.
+    set patience-counter agent-patience         ; The agent-PATIENCE slider controls how long the agents will search for high attraction squares before giving up and settling wherever they happen to be.
+    set size 1                                   ; setting agent size to 1 so that it covers whole patch.
   ]
-   ask turtles [ move-to one-of patches with [attraction1 = 9]]  ; asking the population variable to move to the patches with sprawl attraction equal to 9.
+   ask turtles [ move-to one-of patches with [attraction1 = 1]]  ; asking the population variable to move to the patches with sprawl attraction equal to 9.
 end
 
 to go1
-  ask seekers
+  ask agents
   [
-    ifelse (want-to-build?)                      ; want to build returns true or false statement, after which block works
+    ifelse (confirmation)                      ; want to build returns true or false statement, after which block works
     [
-      set breed houses                           ; if True is reported, the seeker changes its breed to houses.
+      set breed houses                           ; if True is reported, the agent changes its breed to houses.
       set shape "person construction"            ;  setting the shape from shapes library which shows construction worker.
-      set stay-counter wait-between-seeking      ; setting stay-counter to wait between seeking is at what time(ticks) seeker will wait in the same place before moving over.
+      set stay-counter wait-between-seeking      ; setting stay-counter to wait between seeking is at what time(ticks) agent will wait in the same place before moving over.
     ]
     [
       if (patience-counter) > 0
       [
-        turn-toward-attraction                   ; function which defines how seekers have to move forward.
+        turn-toward-attraction                   ; function which defines how agents have to move forward.
         fd 1
         set patience-counter patience-counter - 1 ;reduces the patience counter as it moves forward.
-        set attraction attraction + 0.1           ; increasing attraction of every patch from where the seeker moves to 0.01.
+        set attraction attraction + 0.1           ; increasing attraction of every patch from where the agent moves to 0.01.
       ]
     ]
 
@@ -383,13 +404,13 @@ to go1
 
     ifelse attraction <= (max-attraction * 2)    ;if attraction of particular patch is less than max-attraction which is user defined
       [ set attraction attraction + .5 ]        ; it will be added 0.05 otherwise if attraction has exeeded, it will be awarded a zero and then that area is
-      [ set shape "triangle" ]                       ; not attractive anymore unless other seeker come.
+      [ set shape "triangle" ]                       ; not attractive anymore unless other agent come.
 
-    set stay-counter stay-counter - 1            ; after seekers became houses, the stay-counter decreases with every tick
-    if (stay-counter) <= 0                       ; if stay-counter becomes less than or equal to zero, houses will change to seekers again.
+    set stay-counter stay-counter - 1            ; after agents became houses, the stay-counter decreases with every tick
+    if (stay-counter) <= 0                       ; if stay-counter becomes less than or equal to zero, houses will change to agents again.
     [
-      set breed seekers
-      set patience-counter seeker-patience       ;setting patience-counter to the value of seeker-patience.
+      set breed agents
+      set patience-counter agent-patience       ;setting patience-counter to the value of agent-patience.
       set shape "default"
     ]
   ]
@@ -404,8 +425,26 @@ to go1
    ]
   let x count patches with [ (attraction > 30) or (attraction = 30) ]
 
+  set attractx x
   set attract x + adv
   show attract
+
+
+  set z1a count patches with [ ((attraction > 30) or (attraction = 30)) and (eleven_p = 1) ]
+  set z2a count patches with [ ((attraction > 30) or (attraction = 30)) and (eleven_p = 2) ]
+  set z3a count patches with [ ((attraction > 30) or (attraction = 30)) and (eleven_p = 3) ]
+  set z4a count patches with [ ((attraction > 30) or (attraction = 30)) and (eleven_p = 4) ]
+  set z5a count patches with [ ((attraction > 30) or (attraction = 30)) and (eleven_p = 5) ]
+  set z6a count patches with [ ((attraction > 30) or (attraction = 30)) and (eleven_p = 6) ]
+  set z7a count patches with [ ((attraction > 30) or (attraction = 30)) and (eleven_p = 7) ]
+  set z8a count patches with [ ((attraction > 30) or (attraction = 30)) and (eleven_p = 8) ]
+  set z9a count patches with [ ((attraction > 30) or (attraction = 30)) and (eleven_p = 9) ]
+  set z10a count patches with [ ((attraction > 30) or (attraction = 30)) and (eleven_p = 10) ]
+  set z11a count patches with [ ((attraction > 30) or (attraction = 30)) and (eleven_p = 11) ]
+  set z12a count patches with [ ((attraction > 30) or (attraction = 30)) and (eleven_p = 12) ]
+  set z13a count patches with [ ((attraction > 30) or (attraction = 30)) and (eleven_p = 13) ]
+  set z14a count patches with [ ((attraction > 30) or (attraction = 30)) and (eleven_p = 14) ]
+
 
 ;  if  x > 500
 ;
@@ -414,13 +453,23 @@ to go1
   tick
 end
 
-to-report want-to-build?
+to-report confirmation
 
-  ifelse attraction1 > 1   ; 7 shows 1981 sprawl, it says to falsify the statement if seekers come over 1972 sprawl area.
-  [ report FALSE]
-  [ report random attraction >= build-threshold or patience-counter = 0] ; reporting true or false based on the this code, which basically says if patch attraction no. is greater or patience for seeker has ended.
-  ;or if not any? turtles-on patches
+  ifelse attraction1 > 0   ; 7 shows 1981 sprawl, it says to falsify the statement if agents come over 1972 sprawl area.
+  [  report random attraction >= build-threshold or patience-counter = 0 or versprawl
+   ] ; reporting true or false based on the this code, which basically says if patch attraction no. is greater or patience for agent has ended.
+  [  report random attraction >= build-threshold or patience-counter = 0 ;or if not any? turtles-on patches
+  ]
 end
+
+to-report versprawl
+
+  report random 100 > 60  ; this will fix the amount of newer sprawl which is still coming over inside for vertical sprawl.
+
+
+end
+
+
 
 to turn-toward-attraction
   let loc [attraction] of patch-here
@@ -429,19 +478,19 @@ to turn-toward-attraction
   let ahead [attraction] of patch-ahead 1
   if not ( (ahead <= 0) or (ahead >= 0) )
   [lt random 180]
-  let myright [attraction] of patch-right-and-ahead seeker-search-angle 1
+  let myright [attraction] of patch-right-and-ahead agent-search-angle 1
   if not ( (myright <= 0) or (myright >= 0) )
   [lt random 180]
-  let myleft [attraction] of patch-left-and-ahead seeker-search-angle 1
+  let myleft [attraction] of patch-left-and-ahead agent-search-angle 1
   if not ( (myleft <= 0) or (myleft >= 0) )
   [lt random 180]
   ifelse ((myright > ahead) and (myright > myleft))
   [
-    rt random seeker-search-angle
+    rt random agent-search-angle
   ]
   [
     if (myleft > ahead)
-      [ lt random seeker-search-angle ]
+      [ lt random agent-search-angle ]
   ]
  ]
 end
@@ -495,11 +544,11 @@ end
 GRAPHICS-WINDOW
 520
 15
-2540
-1556
-100
+1285
+551
 75
-10.0
+50
+5.0
 1
 2
 1
@@ -509,10 +558,10 @@ GRAPHICS-WINDOW
 1
 1
 1
--100
-100
 -75
 75
+-50
+50
 0
 0
 1
@@ -696,11 +745,11 @@ SLIDER
 555
 177
 588
-seeker-patience
-seeker-patience
+agent-patience
+agent-patience
 0
 100
-89
+71
 1
 1
 NIL
@@ -715,7 +764,7 @@ wait-between-seeking
 wait-between-seeking
 0
 20
-20
+5
 1
 1
 NIL
@@ -726,8 +775,8 @@ SLIDER
 625
 177
 658
-seeker-search-angle
-seeker-search-angle
+agent-search-angle
+agent-search-angle
 0
 360
 360
@@ -773,7 +822,7 @@ mo1
 mo1
 0
 9
-0
+1
 1
 1
 NIL
@@ -788,7 +837,7 @@ mo2
 mo2
 0
 9
-7
+2
 1
 1
 NIL
@@ -803,7 +852,7 @@ mo3
 mo3
 0
 9
-5
+3
 1
 1
 NIL
@@ -818,7 +867,7 @@ mo4
 mo4
 0
 9
-3
+4
 1
 1
 NIL
@@ -833,7 +882,7 @@ mo5
 mo5
 0
 9
-1
+5
 1
 1
 NIL
@@ -848,7 +897,7 @@ mo0
 mo0
 0
 9
-9
+6
 1
 1
 NIL
@@ -989,7 +1038,7 @@ uls4
 uls4
 0
 1
-0.1
+0.2
 0.01
 1
 NIL
@@ -1064,11 +1113,64 @@ uls9
 uls9
 0
 1
-0.3
+0.2
 0.01
 1
 NIL
 HORIZONTAL
+
+PLOT
+5
+675
+230
+935
+plot 1
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+true
+"" ""
+PENS
+"Z1" 1.0 0 -16777216 true "" "plot  z1a"
+"Z2" 1.0 0 -7500403 true "" "plot  z2a"
+"Z3" 1.0 0 -2674135 true "" "plot  z3a"
+"Z4" 1.0 0 -955883 true "" "plot  z4a"
+"Z5" 1.0 0 -6459832 true "" "plot  z5a"
+"Z6" 1.0 0 -1184463 true "" "plot  z6a"
+"Z7" 1.0 0 -10899396 true "" "plot  z7a"
+"Z8" 1.0 0 -13840069 true "" "plot  z8a"
+"Z9" 1.0 0 -14835848 true "" "plot  z9a"
+"Z10" 1.0 0 -11221820 true "" "plot  z10a"
+"Z11" 1.0 0 -13791810 true "" "plot  z11a"
+"Z12" 1.0 0 -13345367 true "" "plot  z12a"
+"Z13" 1.0 0 -8630108 true "" "plot  z13a"
+"Z14" 1.0 0 -5825686 true "" "plot  z14a"
+
+MONITOR
+315
+750
+455
+795
+NIL
+zonewise
+17
+1
+11
+
+MONITOR
+215
+330
+272
+375
+NIL
+attract1
+17
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
