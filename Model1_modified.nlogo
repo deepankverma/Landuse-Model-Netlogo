@@ -108,12 +108,71 @@ end
 to-report zonewise
 
 
-
-  report z1a + z2a + z3a + z4a + z5a + z6a + z7a + z8a + z9a + z10a + z11a + z12a + z13a + z14a
-
-
+  let g (z1a + z2a + z3a + z4a + z5a + z6a + z7a + z8a + z9a + z10a + z11a + z12a + z13a + z14a)
+  report g
 
 end
+
+
+
+
+to-report z1r
+  report z1a
+end
+
+to-report z2r
+  report z2a
+end
+
+to-report z3r
+  report z3a
+end
+
+to-report z4r
+  report z4a
+end
+
+to-report z5r
+  report z5a
+end
+
+to-report z6r
+  report z6a
+end
+
+to-report z7r
+  report z7a
+end
+
+to-report z8r
+  report z8a
+end
+
+to-report z9r
+  report z9a
+end
+
+to-report z10r
+  report z10a
+end
+
+to-report z11r
+  report z11a
+end
+
+to-report z12r
+  report z12a
+end
+
+to-report z13r
+  report z13a
+end
+
+to-report z14r
+  report z14a
+end
+
+
 
 to-report yearnumber
 
@@ -164,8 +223,9 @@ to manualoverride
 
 
 
-  if ((mo1 + mo2 + mo3 + mo4 + mo5 + mo0) < 26)
-  [ask patches [
+;  if ((mo1 + mo2 + mo3 + mo4 + mo5 + mo0) < 26)
+;  [
+    ask patches [
 
   ifelse sixteen_p = 0
   [set sixteen_p mo0]
@@ -179,7 +239,8 @@ to manualoverride
            [set sixteen_p mo4]
            [if sixteen_p = 1 [set sixteen_p mo5]
 
-  ]]]]]
+ ; ]
+           ]]]]
   ]]
 
 end
@@ -268,6 +329,42 @@ to visualise
 end
 
 
+to wardstozones
+  ask patches [
+    ifelse (eleven_p = 1 or eleven_p = 2 or eleven_p = 3 or eleven_p = 4)
+    [set eleven_p  1]
+    [ifelse (eleven_p = 6 or eleven_p = 5 or eleven_p = 8 or eleven_p = 9 or eleven_p = 19)
+      [set eleven_p  2]
+      [ifelse (eleven_p = 10 or eleven_p = 11 or eleven_p = 12 or eleven_p = 13 or eleven_p = 14)
+         [set eleven_p  3]
+         [ifelse (eleven_p = 15 or eleven_p = 16 or eleven_p = 17 or eleven_p = 18 or eleven_p = 7)
+             [set eleven_p  4]
+             [ifelse (eleven_p = 20 or eleven_p = 21 or eleven_p = 22 or eleven_p = 23 or eleven_p = 24)
+                  [set eleven_p  5]
+                  [ifelse (eleven_p = 25 or eleven_p = 26 or eleven_p = 27 or eleven_p = 28 or eleven_p = 31)
+                      [set eleven_p  6]
+                      [ifelse (eleven_p = 30 or eleven_p = 31 or eleven_p = 32 or eleven_p = 33 or eleven_p = 34)
+                         [set eleven_p  7]
+                         [ifelse (eleven_p = 40 or eleven_p = 41 or eleven_p = 42 or eleven_p = 43 or eleven_p = 64 or eleven_p = 65)
+                            [set eleven_p  8]
+                            [ifelse (eleven_p = 35 or eleven_p = 36 or eleven_p = 37 or eleven_p = 38 or eleven_p = 39)
+                               [set eleven_p  9]
+                               [ifelse (eleven_p = 44 or eleven_p = 45 or eleven_p = 47 or eleven_p = 48 or eleven_p = 29)
+                                  [set eleven_p  10]
+                                  [ifelse (eleven_p = 49 or eleven_p = 50 or eleven_p = 51 or eleven_p = 52 or eleven_p = 53)
+                                     [set eleven_p  11]
+                                     [ifelse (eleven_p = 54 or eleven_p = 55 or eleven_p = 56 or eleven_p = 57 or eleven_p = 58)
+                                        [set eleven_p  12]
+                                        [ifelse (eleven_p = 59 or eleven_p = 60 or eleven_p = 61 or eleven_p = 62 or eleven_p = 63)
+                                          [set eleven_p  13]
+                                          [set eleven_p  14]
+
+
+                                          ]]]]]]]]]]]]
+  ]
+
+end
+
 to clear
  ; set fileList []
 
@@ -337,7 +434,7 @@ while [attract < a1]
 [go1]
 
 
-
+set z1a count patches with [ (attraction > 29.999) and (eleven_p = 1) ]
 
 ]
 
@@ -418,9 +515,9 @@ to go1
   [
    set pcolor scale-color green attraction 2.5 10
    if (attraction > 20) and (attraction < 30)
-   [set pcolor orange]
+   [set pcolor yellow - 2]
    if attraction > 30
-   [ set pcolor red]
+   [ set pcolor orange - 1]
 
    ]
   let x count patches with [ (attraction > 30) or (attraction = 30) ]
@@ -444,7 +541,7 @@ to go1
   set z12a count patches with [ ((attraction > 30) or (attraction = 30)) and (eleven_p = 12) ]
   set z13a count patches with [ ((attraction > 30) or (attraction = 30)) and (eleven_p = 13) ]
   set z14a count patches with [ ((attraction > 30) or (attraction = 30)) and (eleven_p = 14) ]
-
+;
 
 ;  if  x > 500
 ;
@@ -734,7 +831,7 @@ population
 population
 0
 700
-526
+495
 1
 1
 NIL
@@ -749,7 +846,7 @@ agent-patience
 agent-patience
 0
 100
-71
+100
 1
 1
 NIL
@@ -837,7 +934,7 @@ mo2
 mo2
 0
 9
-2
+3
 1
 1
 NIL
@@ -852,7 +949,7 @@ mo3
 mo3
 0
 9
-3
+5
 1
 1
 NIL
@@ -867,7 +964,7 @@ mo4
 mo4
 0
 9
-4
+7
 1
 1
 NIL
@@ -882,7 +979,7 @@ mo5
 mo5
 0
 9
-5
+9
 1
 1
 NIL
@@ -897,7 +994,7 @@ mo0
 mo0
 0
 9
-6
+1
 1
 1
 NIL
@@ -1122,8 +1219,8 @@ HORIZONTAL
 PLOT
 5
 675
-230
-935
+300
+1045
 plot 1
 NIL
 NIL
@@ -1151,10 +1248,10 @@ PENS
 "Z14" 1.0 0 -5825686 true "" "plot  z14a"
 
 MONITOR
-315
-750
-455
-795
+215
+380
+270
+425
 NIL
 zonewise
 17
@@ -1168,6 +1265,177 @@ MONITOR
 375
 NIL
 attract1
+17
+1
+11
+
+BUTTON
+100
+70
+207
+103
+NIL
+wardstozones
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+MONITOR
+315
+745
+372
+790
+NIL
+z1r
+17
+1
+11
+
+MONITOR
+375
+745
+432
+790
+NIL
+z2r
+17
+1
+11
+
+MONITOR
+435
+745
+492
+790
+NIL
+z3r
+17
+1
+11
+
+MONITOR
+315
+800
+372
+845
+NIL
+z4r
+17
+1
+11
+
+MONITOR
+375
+800
+432
+845
+NIL
+z5r
+17
+1
+11
+
+MONITOR
+435
+800
+492
+845
+NIL
+z6r
+17
+1
+11
+
+MONITOR
+315
+855
+372
+900
+NIL
+z7r
+17
+1
+11
+
+MONITOR
+375
+855
+432
+900
+NIL
+z8r
+17
+1
+11
+
+MONITOR
+435
+855
+492
+900
+NIL
+z9r
+17
+1
+11
+
+MONITOR
+315
+910
+372
+955
+NIL
+z10r
+17
+1
+11
+
+MONITOR
+375
+910
+432
+955
+NIL
+z11r
+17
+1
+11
+
+MONITOR
+435
+910
+492
+955
+NIL
+z12r
+17
+1
+11
+
+MONITOR
+315
+965
+372
+1010
+NIL
+z13r
+17
+1
+11
+
+MONITOR
+375
+965
+432
+1010
+NIL
+z14r
 17
 1
 11
