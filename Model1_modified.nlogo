@@ -430,15 +430,18 @@ setup1
 
     show a1
 
+if years = 2035
+
+  [ set newraster gis:patch-dataset attraction
+ gis:store-dataset newraster "Outfile_1.asc"
+  ]
+
 while [attract < a1]
 [go1]
 
 ]
 
-  if years = 2016
-  [ set newraster gis:patch-dataset attract
- gis:store-dataset newraster "Outfile.asc"
-  ]
+
 
 end
 
@@ -457,9 +460,16 @@ to setup-patches
 
  gis:apply-raster suitab suitab_p
 ;gis:paint suitab 150
-  gis:apply-raster sixteen attraction1
-  gis:apply-raster suitab attraction
+ ; gis:apply-raster sixteen attraction1
 
+ ask patches [
+ set attraction1 sixteen_p
+ ]
+  gis:apply-raster suitab attraction
+ask patches [
+  if attraction1 > 0
+  [ set attraction attraction1]
+]
   ask patches with [suitab_p > 0]
 
   [
@@ -595,50 +605,6 @@ to turn-toward-attraction
 end
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-to land_use_colors
-
-ask patches [
-
-  ifelse (lu_p = 1) or (lu_p = 3) [ set pcolor yellow ] [      ;; residential
-  ifelse (lu_p = 4) or (lu_p = 5) or (lu_p = 6) or (lu_p = 7) or (lu_p = 8) [ set pcolor blue ] [      ;; commercial
-  ifelse (lu_p = 9) or (lu_p = 10) or (lu_p = 11) or (lu_p = 12) or (lu_p = 13) or (lu_p = 14) or (lu_p = 15) [ set pcolor red ] [ ;; PSP UTIL
-  ifelse (lu_p = 16) [ set pcolor magenta ] [       ;; Industrial
-  ifelse (lu_p = 17) or (lu_p = 18) [ set pcolor cyan ] [   ;; water body
-  ifelse (lu_p = 19) or (lu_p = 20) or (lu_p = 21) [ set pcolor green ] [     ;; play grounds
-  ifelse (lu_p = 22) or (lu_p = 23) [ set pcolor orange ] [    ;; heritage
-  ifelse (lu_p = 24) or (lu_p = 25) [ set pcolor black ] [     ;; roads
-  ifelse (lu_p = 26) or (lu_p = 28) [ set pcolor lime ] [   ;; agri
-  ifelse (lu_p = 29) [ set pcolor brown ] [                  ;; vacant
-  ifelse (lu_p = 30) [ set pcolor turquoise ] [                  ;; forest
-   ] ] ] ] ] ] ] ] ] ] ]     ]          ;;
-
-end
 @#$#@#$#@
 GRAPHICS-WINDOW
 520
@@ -981,7 +947,7 @@ mo5
 mo5
 0
 9
-9
+1
 1
 1
 NIL
@@ -996,7 +962,7 @@ mo0
 mo0
 0
 9
-1
+9
 1
 1
 NIL
@@ -1441,6 +1407,16 @@ z14r
 17
 1
 11
+
+TEXTBOX
+280
+55
+315
+265
+1972\n\n\n1981\n\n\n1991\n\n\n2001\n\n\n2011\n\nUNDEV
+11
+0.0
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
