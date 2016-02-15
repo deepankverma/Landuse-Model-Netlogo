@@ -227,9 +227,8 @@ to manualoverride
 ;  [
     ask patches [
 
-  ifelse sixteen_p = 0
-  [set sixteen_p mo0]
-  [ifelse sixteen_p = 9
+
+  ifelse sixteen_p = 9
     [set sixteen_p mo1]
     [ifelse sixteen_p = 7
        [set sixteen_p mo2]
@@ -241,7 +240,7 @@ to manualoverride
 
  ; ]
            ]]]]
-  ]]
+  ]
 
 end
 
@@ -426,19 +425,34 @@ setup1
 
  ;set a1 round(a1)
 
-    set years  years + 1  show years
+
 
     show a1
 
-if years = 2035
+ifelse years = 2016
+[set newraster gis:patch-dataset attraction
+ gis:store-dataset newraster "Outfile_1.asc"]
+[ifelse years = 2021
+  [set newraster gis:patch-dataset attraction
+  gis:store-dataset newraster "Outfile_2.asc"]
+  [ifelse years = 2026
+    [set newraster gis:patch-dataset attraction
+     gis:store-dataset newraster "Outfile_3.asc"]
+    [ifelse years = 2031
+       [set newraster gis:patch-dataset attraction
+        gis:store-dataset newraster "Outfile_4.asc"]
+       [if years = 2035
+         [set newraster gis:patch-dataset attraction
+        gis:store-dataset newraster "Outfile_5.asc"]
 
-  [ set newraster gis:patch-dataset attraction
- gis:store-dataset newraster "Outfile_1.asc"
-  ]
+
+       ]]]]
 
 while [attract < a1]
 [go1]
 
+
+    set years  years + 1  show years
 ]
 
 
@@ -485,7 +499,7 @@ to setup-turtles
     set patience-counter agent-patience         ; The agent-PATIENCE slider controls how long the agents will search for high attraction squares before giving up and settling wherever they happen to be.
     set size 1                                   ; setting agent size to 1 so that it covers whole patch.
   ]
-   ask turtles [ move-to one-of patches with [attraction1 = 1]]  ; asking the population variable to move to the patches with sprawl attraction equal to 9.
+   ask turtles [ move-to one-of patches with [attraction = 9]]  ; asking the population variable to move to the patches with sprawl attraction equal to 9.
 end
 
 to go1
@@ -604,15 +618,14 @@ to turn-toward-attraction
  ]
 end
 
-
 @#$#@#$#@
 GRAPHICS-WINDOW
 520
 15
-1285
-551
+1535
+801
+100
 75
-50
 5.0
 1
 2
@@ -623,10 +636,10 @@ GRAPHICS-WINDOW
 1
 1
 1
+-100
+100
 -75
 75
--50
-50
 0
 0
 1
@@ -945,21 +958,6 @@ SLIDER
 228
 mo5
 mo5
-0
-9
-1
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-315
-230
-487
-263
-mo0
-mo0
 0
 9
 9
