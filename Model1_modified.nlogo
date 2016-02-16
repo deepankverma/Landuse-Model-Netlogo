@@ -65,12 +65,13 @@ to setup
                                                 (gis:envelope-of sixteen))
 
 
- ; gis:paint fifteen 150  ;to color the raster or the shapefile.
+ ;gis:paint eleven 150  ;to color the raster or the shapefile.
  ; gis:paint two 150
 ;  set a gis:width-of one
 ;  print a
 end
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 to classify
 
@@ -260,7 +261,7 @@ to postcheck
 
 end
 
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 to suitability
 
@@ -295,10 +296,11 @@ repeat (gis:width-of seven)
   set y y + 1 ]
  set x x + 1 ]
 
-;gis:paint suitab 150
+gis:paint suitab 150
 
 end
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 to visualise
   ask turtles [
@@ -441,12 +443,14 @@ ifelse years = 2016
     [ifelse years = 2031
        [set newraster gis:patch-dataset attraction
         gis:store-dataset newraster "Outfile_4.asc"]
-       [if years = 2035
+       [ifelse years = 2034
          [set newraster gis:patch-dataset attraction
-        gis:store-dataset newraster "Outfile_5.asc"]
+         gis:store-dataset newraster "Outfile_5.asc"]
+         [if years = 2035
+           [set newraster gis:patch-dataset attraction
+         gis:store-dataset newraster "Outfile_6.asc"]
 
-
-       ]]]]
+       ]]]]]
 
 while [attract < a1]
 [go1]
@@ -617,7 +621,6 @@ to turn-toward-attraction
   ]
  ]
 end
-
 @#$#@#$#@
 GRAPHICS-WINDOW
 520
@@ -893,9 +896,9 @@ MANUAL OVERRIDE FACTORS FOR SPRAWL
 
 SLIDER
 315
-50
+45
 487
-83
+78
 mo1
 mo1
 0
@@ -908,14 +911,14 @@ HORIZONTAL
 
 SLIDER
 315
-90
+85
 487
-123
+118
 mo2
 mo2
 0
 9
-3
+4
 1
 1
 NIL
@@ -938,9 +941,9 @@ HORIZONTAL
 
 SLIDER
 315
-160
+170
 487
-193
+203
 mo4
 mo4
 0
@@ -953,9 +956,9 @@ HORIZONTAL
 
 SLIDER
 315
-195
+215
 487
-228
+248
 mo5
 mo5
 0
@@ -1022,7 +1025,7 @@ TEXTBOX
 455
 190
 473
-SEEKER BEHAVIOURS
+AGENT BEHAVIOURS
 12
 95.0
 1
@@ -1101,7 +1104,7 @@ uls4
 uls4
 0
 1
-0.2
+0.22
 0.01
 1
 NIL
@@ -1131,7 +1134,7 @@ uls6
 uls6
 0
 1
-0.05
+0.03
 0.01
 1
 NIL
@@ -1410,8 +1413,8 @@ TEXTBOX
 280
 55
 315
-265
-1972\n\n\n1981\n\n\n1991\n\n\n2001\n\n\n2011\n\nUNDEV
+261
+1972\n\n\n1981\n\n\n1991\n\n\n2001\n\n\n2011\n
 11
 0.0
 1
