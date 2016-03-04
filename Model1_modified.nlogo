@@ -2,7 +2,7 @@ extensions [csv]
 extensions [gis]
 breed [data-points data-point]
 breed [centroids centroid]
-globals [lu lu1 one two three four five six seven seventwo eight nine ten eleven twelve thirteen fourteen fifteen sixteen suitab wards s1 a1 a2 a3 adv csv c1 years xlfile filelist fileList1 xy Z1 Z1bf Z2 Z3 Z4 Z5 Z6 Z7 Z8 Z9 Z10 Z11 Z12 Z13 Z14 W1  W2  W3  W4  W5  W6  W7  W8  W9  W10  W11  W12  W13  W14  W15  W16  W17  W18  W19  W20  W21  W22  W23  W24  W25  W26  W27  W28  W29  W30  W31  W32  W33  W34  W35  W36  W37  W38  W39  W40  W41  W42  W43  W44  W45  W46  W47  W48  W49  W50  W51  W52  W53  W54  W55  W56  W57  W58  W59  W60  W61  W62  W63  W64  W65  W66  W67  W68  W69  W70
+globals [lu lu1 one two three four five six seven seventwo eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen suitab wards s1 a1 a2 a3 adv csv c1 years xlfile filelist fileList1 xy Z1 Z1bf Z2 Z3 Z4 Z5 Z6 Z7 Z8 Z9 Z10 Z11 Z12 Z13 Z14 W1  W2  W3  W4  W5  W6  W7  W8  W9  W10  W11  W12  W13  W14  W15  W16  W17  W18  W19  W20  W21  W22  W23  W24  W25  W26  W27  W28  W29  W30  W31  W32  W33  W34  W35  W36  W37  W38  W39  W40  W41  W42  W43  W44  W45  W46  W47  W48  W49  W50  W51  W52  W53  W54  W55  W56  W57  W58  W59  W60  W61  W62  W63  W64  W65  W66  W67  W68  W69  W70
 a i j k l n1 any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded areaZ1 congestionfactZ1 newraster originalcongestionZ1 mylist attractx build-threshold attract z1a z2a z3a z4a z5a z6a z7a z8a z9a z10a z11a z12a z13a z14a ]
 
 breed [ houses house ]
@@ -12,7 +12,7 @@ houses-own [ stay-counter ]
 agents-own [ patience-counter ]
 
 turtles-own [lu_t ]
-patches-own [lu_p one_p two_p three_p four_p five_p six_p sevenone_p seventwo_p eight_p ten_p eleven_p twelve_p thirteen_p suitab_p fourteen_p fifteen_p sixteen_p attraction attraction1]
+patches-own [lu_p one_p two_p three_p four_p five_p six_p sevenone_p seventwo_p eight_p ten_p eleven_p twelve_p thirteen_p suitab_p fourteen_p fifteen_p sixteen_p seventeen_p attraction attraction1]
 
 to setup
   clear-all
@@ -35,6 +35,7 @@ to setup
   set fourteen gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/developas.asc"
   set fifteen gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/sprawlaras.asc"
   set sixteen gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/model1sprawlas.asc"
+  set seventeen gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/mainroadsbuffer.shp"
 
 
 
@@ -62,7 +63,8 @@ to setup
                                                 (gis:envelope-of thirteen)
                                                 (gis:envelope-of fourteen)
                                                 (gis:envelope-of fifteen)
-                                                (gis:envelope-of sixteen))
+                                                (gis:envelope-of sixteen)
+                                                (gis:envelope-of seventeen))
 
 
  ;gis:paint eleven 150  ;to color the raster or the shapefile.
@@ -72,6 +74,24 @@ to setup
 end
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+to load
+
+  foreach gis:feature-list-of seventeen
+  [gis:set-drawing-color black
+    gis:draw ? 1.0
+  ]
+
+  gis:apply-coverage seventeen "BUFF_DIST" seventeen_p          ; Applying polygon [vector] dataset into patch variable using "BUFF_DIST"as the property.
+
+
+end
+
+to load1
+  ask patches with [seventeen_p = 15]                           ; coloring the patches which are under the roads.
+  [ set pcolor red]
+
+end
 
 to classify
 
@@ -448,7 +468,7 @@ ifelse years = 2016
          gis:store-dataset newraster "Outfile_5.asc"]
          [if years = 2035
            [set newraster gis:patch-dataset attraction
-         gis:store-dataset newraster "Outfile_6.asc"]
+            gis:store-dataset newraster "Outfile_6.asc"]
 
        ]]]]]
 
