@@ -2,8 +2,8 @@ extensions [csv]
 extensions [gis]
 breed [data-points data-point]
 breed [centroids centroid]
-globals [lu lu1 one two three four five six seven seventwo eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen suitab wards s1 a1 a2 a3 adv csv c1 years xlfile filelist fileList1 xy Z1 Z1bf Z2 Z3 Z4 Z5 Z6 Z7 Z8 Z9 Z10 Z11 Z12 Z13 Z14 W1  W2  W3  W4  W5  W6  W7  W8  W9  W10  W11  W12  W13  W14  W15  W16  W17  W18  W19  W20  W21  W22  W23  W24  W25  W26  W27  W28  W29  W30  W31  W32  W33  W34  W35  W36  W37  W38  W39  W40  W41  W42  W43  W44  W45  W46  W47  W48  W49  W50  W51  W52  W53  W54  W55  W56  W57  W58  W59  W60  W61  W62  W63  W64  W65  W66  W67  W68  W69  W70
-a i j k l n1 any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded areaZ1 congestionfactZ1 newraster originalcongestionZ1 mylist attractx build-threshold attract z1a z2a z3a z4a z5a z6a z7a z8a z9a z10a z11a z12a z13a z14a ]
+globals [lu lu1 one two three four five six seven seventwo eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen suitab wards s1 a1 a2 a3 adv csv c1 years xlfile filelist fileList1 xy Z1 Z1bf Z2 Z3 Z4 Z5 Z6 Z7 Z8 Z9 Z10 Z11 Z12 Z13 Z14 W1  W2  W3  W4  W5  W6  W7  W8  W9  W10  W11  W12  W13  W14  W15  W16  W17  W18  W19  W20  W21  W22  W23  W24  W25  W26  W27  W28  W29  W30  W31  W32  W33  W34  W35  W36  W37  W38  W39  W40  W41  W42  W43  W44  W45  W46  W47  W48  W49  W50  W51  W52  W53  W54  W55  W56  W57  W58  W59  W60  W61  W62  W63  W64  W65  W66  W67  W68  W69  W70
+a i j k l n1 any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded areaZ1 congestionfactZ1 roads newraster originalcongestionZ1 mylist attractx build-threshold attract z1a z2a z3a z4a z5a z6a z7a z8a z9a z10a z11a z12a z13a z14a ]
 
 breed [ houses house ]
 breed [ agents agent ]
@@ -12,7 +12,7 @@ houses-own [ stay-counter ]
 agents-own [ patience-counter ]
 
 turtles-own [lu_t ]
-patches-own [lu_p one_p two_p three_p four_p five_p six_p sevenone_p seventwo_p eight_p ten_p eleven_p twelve_p thirteen_p suitab_p fourteen_p fifteen_p sixteen_p seventeen_p attraction attraction1]
+patches-own [lu_p one_p two_p three_p four_p five_p six_p sevenone_p seventwo_p eight_p ten_p eleven_p twelve_p thirteen_p suitab_p fourteen_p fifteen_p sixteen_p seventeen_p eighteen_p nineteen_p attraction attraction1]
 
 to setup
   clear-all
@@ -36,6 +36,9 @@ to setup
   set fifteen gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/sprawlaras.asc"
   set sixteen gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/model1sprawlas.asc"
   set seventeen gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/mainroadsbuffer.shp"
+  set eighteen gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/eudistas.asc"
+  set nineteen gis:load-dataset "C:/Users/DEEPANK/Desktop/Bhopal Data collection/New Bhopal Plans/newrasters/eucldist_2.asc"
+
 
 
 
@@ -64,7 +67,10 @@ to setup
                                                 (gis:envelope-of fourteen)
                                                 (gis:envelope-of fifteen)
                                                 (gis:envelope-of sixteen)
-                                                (gis:envelope-of seventeen))
+                                                (gis:envelope-of seventeen)
+                                                (gis:envelope-of eighteen)
+                                                (gis:envelope-of nineteen)
+                                                )
 
 
  ;gis:paint eleven 150  ;to color the raster or the shapefile.
@@ -87,11 +93,40 @@ to load
 
 end
 
+
+
+
 to load1
   ask patches with [seventeen_p = 15]                           ; coloring the patches which are under the roads.
   [ set pcolor red]
+;  gis:paint eighteen 150
+;  gis:paint nineteen 150
+end
+
+
+
+to load2
+
+
+  ask patches [
+
+
+  ifelse (eighteen_p < 0) or (eighteen_p > 0) [
+  let x (1 / eighteen_p) * 100
+  set eighteen_p x
+  ]
+  [ set eighteen_p 0]
+
+
+  ifelse (nineteen_p < 0) or (nineteen_p > 0) [
+    let x (1 / nineteen_p) * 100
+    set nineteen_p x
+  ]
+  [ set nineteen_p 0]
+  ]
 
 end
+
 
 to classify
 
@@ -102,6 +137,9 @@ to classify
   gis:apply-raster fourteen fourteen_p
   gis:apply-raster thirteen thirteen_p
   gis:apply-raster sixteen sixteen_p
+  gis:apply-raster eighteen eighteen_p
+  gis:apply-raster nineteen nineteen_p
+
 let p count patches with [sixteen_p > 0]
 show p
 set c1 (p / 10033.74)   ; unitary method is applied here, which shows how much patches in 1 ha of area is present. Necessary if the extent of model is changed.
@@ -304,6 +342,7 @@ repeat (gis:width-of seven)
     let gseo gis:raster-value seven x y
     let ge gis:raster-value eight x y
     let gn gis:raster-value nine x y
+
     ;let gfif gis:raster-value fifteen x y
   ;  while [(uls1 + uls2 + uls3 + uls4 + uls5 + uls6 + uls7 + uls8 + uls9) = 1]
   ;[
@@ -317,6 +356,10 @@ repeat (gis:width-of seven)
  set x x + 1 ]
 
 gis:paint suitab 150
+
+load
+load1
+load2
 
 end
 
@@ -333,16 +376,16 @@ to visualise
   ask patches [
 
 
-  ifelse suitab_p > 7.5
+  ifelse suitab_p > 7.51
   [set pcolor pink]
-  [ifelse (suitab_p > 6.5 and suitab_p < 7.5)
+  [ifelse (suitab_p > 6.5 and suitab_p < 7.51)
   [ set pcolor blue ]
-  [ ifelse (suitab_p > 5.5 and suitab_p < 6.5)
+  [ ifelse (suitab_p > 5.5 and suitab_p < 6.51)
     [ set pcolor red ]
-    [ ifelse (suitab_p > 4.5 and suitab_p < 5.5)
+    [ ifelse (suitab_p > 4.5 and suitab_p < 5.51)
       [ set pcolor green ]
-      [ ifelse (suitab_p > 3.5 and suitab_p < 4.5)
-        [ set pcolor cyan ]
+      [ ifelse (suitab_p > 3.5 and suitab_p < 4.51)
+        [ set pcolor grey ]
         [ set pcolor black ]
 
   ]]]
@@ -501,12 +544,16 @@ to setup-patches
  ; gis:apply-raster sixteen attraction1
 
  ask patches [
- set attraction1 sixteen_p
+
+ ifelse (sixteen_p > 0)  ; adding attraction due to new road patches
+ [set attraction1 (sixteen_p + eighteen_p + nineteen_p)]
+ [set attraction1 sixteen_p
+ ]
  ]
   gis:apply-raster suitab attraction
 ask patches [
   if attraction1 > 0
-  [ set attraction attraction1]
+  [ set attraction attraction1]               ; taking the attraction from the sprawl and adding the values to the main attraction.
 ]
   ask patches with [suitab_p > 0]
 
@@ -564,10 +611,12 @@ to go1
   ask patches with [suitab_p > 0]
   [
    set pcolor scale-color green attraction 2.5 10
-   if (attraction > 20) and (attraction < 30)
-   [set pcolor yellow - 2]
-   if attraction > 30
-   [ set pcolor orange - 1]
+   if (attraction > 10) and (attraction < 20)
+   [set pcolor pink ]
+   if (attraction > 19.9) and (attraction < 30)
+   [set pcolor yellow ]
+   if attraction > 29.9
+   [ set pcolor orange]
 
    ]
   let x count patches with [ (attraction > 30) or (attraction = 30) ]
@@ -1079,7 +1128,7 @@ uls1
 uls1
 0
 1
-0.1
+0.05
 0.01
 1
 NIL
@@ -1109,7 +1158,7 @@ uls3
 uls3
 0
 1
-0.05
+0.1
 0.05
 1
 NIL
@@ -1124,7 +1173,7 @@ uls4
 uls4
 0
 1
-0.22
+0.1
 0.01
 1
 NIL
@@ -1152,36 +1201,6 @@ SLIDER
 658
 uls6
 uls6
-0
-1
-0.03
-0.01
-1
-NIL
-HORIZONTAL
-
-SLIDER
-315
-660
-407
-693
-uls7
-uls7
-0
-1
-0.15
-0.01
-1
-NIL
-HORIZONTAL
-
-SLIDER
-410
-660
-502
-693
-uls8
-uls8
 0
 1
 0.05
@@ -1192,14 +1211,44 @@ HORIZONTAL
 
 SLIDER
 315
+660
+407
+693
+uls7
+uls7
+0
+1
+0.15
+0.01
+1
+NIL
+HORIZONTAL
+
+SLIDER
+410
+660
+502
+693
+uls8
+uls8
+0
+1
+0.1
+0.01
+1
+NIL
+HORIZONTAL
+
+SLIDER
+315
 695
-500
+407
 728
 uls9
 uls9
 0
 1
-0.2
+0.25
 0.01
 1
 NIL
