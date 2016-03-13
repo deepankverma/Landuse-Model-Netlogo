@@ -12,7 +12,7 @@ houses-own [ stay-counter ]
 agents-own [ patience-counter ]
 
 turtles-own [lu_t ]
-patches-own [lu_p model2 one_p two_p three_p four_p five_p six_p sevenone_p seventwo_p eight_p ten_p eleven_p twelve_p thirteen_p suitab_p fourteen_p fifteen_p sixteen_p seventeen_p eighteen_p nineteen_p attraction attraction1]
+patches-own [lu_p model2 one_p two_p three_p four_p five_p six_p sevenone_p seventwo_p eight_p ten_p eleven_p twelve_p thirteen_p suitab_p fourteen_p fifteen_p sixteen_p seventeen_p eighteen_p nineteen_p twentyo_p attraction attraction1]
 
 to setup
   clear-all
@@ -149,6 +149,8 @@ to classify
   gis:apply-raster sixteen sixteen_p
   gis:apply-raster eighteen eighteen_p
   gis:apply-raster nineteen nineteen_p
+
+
 
 let p count patches with [sixteen_p > 0]
 show p
@@ -454,8 +456,48 @@ to wardstozones
                                           [set eleven_p  14]
 
 
+
                                           ]]]]]]]]]]]]
   ]
+
+  gis:apply-raster eleven twentyo_p
+
+  ask patches [
+
+  ifelse (eleven_p = 1)
+  [ set twentyo_p mdz1]
+  [ifelse (eleven_p = 2)
+    [set twentyo_p mdz2]
+    [ifelse (eleven_p = 3)
+      [set twentyo_p mdz3]
+      [ifelse (eleven_p = 4)
+        [set twentyo_p mdz4]
+        [ifelse (eleven_p = 5)
+          [set twentyo_p mdz5]
+          [ifelse (eleven_p = 6)
+            [set twentyo_p mdz6]
+            [ifelse (eleven_p = 7)
+              [set twentyo_p mdz7]
+              [ifelse (eleven_p = 8)
+                [set twentyo_p mdz8]
+                [ifelse (eleven_p = 9)
+                  [set twentyo_p mdz9]
+                  [ifelse (eleven_p = 10)
+                    [set twentyo_p mdz10]
+                    [ifelse (eleven_p = 11)
+                      [set twentyo_p mdz11]
+                      [ifelse (eleven_p = 12)
+                        [set twentyo_p mdz12]
+                        [ifelse (eleven_p = 13)
+                          [set twentyo_p mdz13]
+                          [set twentyo_p mdz14]
+
+                         ]]]]]]]]]]]]
+  ]
+
+ask patches with [ twentyo_p > 2]
+[ set pcolor red]
+
 
 end
 
@@ -608,7 +650,7 @@ to setup-turtles
     set patience-counter agent-patience         ; The agent-PATIENCE slider controls how long the agents will search for high attraction squares before giving up and settling wherever they happen to be.
     set size 1                                   ; setting agent size to 1 so that it covers whole patch.
   ]
-   ask turtles [ move-to one-of patches with [attraction = 9]]  ; asking the population variable to move to the patches with sprawl attraction equal to 9.
+   ask turtles [ move-to one-of patches with [attraction = 9 ]]  ; asking the population variable to move to the patches with sprawl attraction equal to 9.
 end
 
 to go1
@@ -626,7 +668,11 @@ to go1
         turn-toward-attraction                   ; function which defines how agents have to move forward.
         fd 1
         set patience-counter patience-counter - 1 ;reduces the patience counter as it moves forward.
-        set attraction attraction + 0.05           ; increasing attraction of every patch from where the agent moves to 0.01.
+
+        ifelse (model2 <= twentyo_p)
+
+        [set attraction attraction + 0.05]           ; increasing attraction of every patch from where the agent moves to 0.01.
+        [set attraction attraction + 0.001]
       ]
     ]
 
@@ -635,7 +681,9 @@ to go1
   [
 
     ifelse attraction <= (max-attraction * 2)    ;if attraction of particular patch is less than max-attraction which is user defined
-      [ set attraction attraction + .1 ]        ; it will be added 0.05 otherwise if attraction has exeeded, it will be awarded a zero and then that area is
+      [ ifelse (model2 <= twentyo_p)
+        [set attraction attraction + .1 ]
+        [set attraction attraction + 0.001]  ]            ; it will be added 0.05 otherwise if attraction has exeeded, it will be awarded a zero and then that area is
       [ set shape "triangle" ]                       ; not attractive anymore unless other agent come.
 
     set stay-counter stay-counter - 1            ; after agents became houses, the stay-counter decreases with every tick
@@ -721,19 +769,16 @@ end
 
 to-report confirmation
 
+
   ifelse attraction1 > 0   ; 7 shows 1981 sprawl, it says to falsify the statement if agents come over 1972 sprawl area.
-  [  report random attraction >= build-threshold or patience-counter = 0 or versprawl
+  [  report (random attraction >= build-threshold or patience-counter = 0); and model2 <= twentyo_p)
    ] ; reporting true or false based on the this code, which basically says if patch attraction no. is greater or patience for agent has ended.
-  [  report random attraction >= build-threshold or patience-counter = 0 ;or if not any? turtles-on patches
+  [  report (random attraction >= build-threshold or patience-counter = 0) ; and model2 <= twentyo_p) ;or if not any? turtles-on patches
   ]
-end
-
-to-report versprawl
-
-  report random 100 > 60  ; this will fix the amount of newer sprawl which is still coming over inside for vertical sprawl.
-
 
 end
+
+
 
 
 
@@ -760,8 +805,6 @@ to turn-toward-attraction
   ]
  ]
 end
-
-
 @#$#@#$#@
 GRAPHICS-WINDOW
 520
@@ -1059,7 +1102,7 @@ mo2
 mo2
 0
 9
-4
+3
 1
 1
 NIL
@@ -1104,7 +1147,7 @@ mo5
 mo5
 0
 9
-8
+9
 1
 1
 NIL
@@ -1570,6 +1613,160 @@ attract
 17
 1
 11
+
+INPUTBOX
+520
+805
+570
+865
+mdz1
+2
+1
+0
+Number
+
+INPUTBOX
+575
+805
+625
+865
+mdz2
+1
+1
+0
+Number
+
+INPUTBOX
+630
+805
+680
+865
+mdz3
+3
+1
+0
+Number
+
+INPUTBOX
+685
+805
+735
+865
+mdz4
+4
+1
+0
+Number
+
+INPUTBOX
+740
+805
+790
+865
+mdz5
+2
+1
+0
+Number
+
+INPUTBOX
+795
+805
+845
+865
+mdz6
+1
+1
+0
+Number
+
+INPUTBOX
+850
+805
+900
+865
+mdz7
+3
+1
+0
+Number
+
+INPUTBOX
+520
+870
+570
+930
+mdz8
+4
+1
+0
+Number
+
+INPUTBOX
+575
+870
+625
+930
+mdz9
+2
+1
+0
+Number
+
+INPUTBOX
+630
+870
+680
+930
+mdz10
+1
+1
+0
+Number
+
+INPUTBOX
+685
+870
+735
+930
+mdz11
+3
+1
+0
+Number
+
+INPUTBOX
+740
+870
+790
+930
+mdz12
+4
+1
+0
+Number
+
+INPUTBOX
+795
+870
+845
+930
+mdz13
+2
+1
+0
+Number
+
+INPUTBOX
+850
+870
+900
+930
+mdz14
+1
+1
+0
+Number
 
 @#$#@#$#@
 ## WHAT IS IT?
