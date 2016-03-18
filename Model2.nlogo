@@ -1620,7 +1620,7 @@ INPUTBOX
 570
 865
 mdz1
-2
+4
 1
 0
 Number
@@ -1631,7 +1631,7 @@ INPUTBOX
 625
 865
 mdz2
-1
+1.75
 1
 0
 Number
@@ -1642,7 +1642,7 @@ INPUTBOX
 680
 865
 mdz3
-3
+2.5
 1
 0
 Number
@@ -1653,7 +1653,7 @@ INPUTBOX
 735
 865
 mdz4
-4
+1.5
 1
 0
 Number
@@ -1664,7 +1664,7 @@ INPUTBOX
 790
 865
 mdz5
-2
+4.5
 1
 0
 Number
@@ -1675,7 +1675,7 @@ INPUTBOX
 845
 865
 mdz6
-1
+3.75
 1
 0
 Number
@@ -1697,7 +1697,7 @@ INPUTBOX
 570
 930
 mdz8
-4
+2.75
 1
 0
 Number
@@ -1708,7 +1708,7 @@ INPUTBOX
 625
 930
 mdz9
-2
+3
 1
 0
 Number
@@ -1719,7 +1719,7 @@ INPUTBOX
 680
 930
 mdz10
-1
+3
 1
 0
 Number
@@ -1730,7 +1730,7 @@ INPUTBOX
 735
 930
 mdz11
-3
+4
 1
 0
 Number
@@ -1741,7 +1741,7 @@ INPUTBOX
 790
 930
 mdz12
-4
+4.5
 1
 0
 Number
@@ -1752,7 +1752,7 @@ INPUTBOX
 845
 930
 mdz13
-2
+4.75
 1
 0
 Number
@@ -1763,7 +1763,7 @@ INPUTBOX
 900
 930
 mdz14
-1
+4.75
 1
 0
 Number

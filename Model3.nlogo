@@ -3,7 +3,7 @@ extensions [gis]
 breed [data-points data-point]
 breed [centroids centroid]
 globals [lu lu1 one two three four five six seven seventwo eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty countingsprawl suitab wards s1 a1 a2 a3 adv csv c1 years xlfile filelist fileList1 xy Z1 Z1bf Z2 Z3 Z4 Z5 Z6 Z7 Z8 Z9 Z10 Z11 Z12 Z13 Z14 W1  W2  W3  W4  W5  W6  W7  W8  W9  W10  W11  W12  W13  W14  W15  W16  W17  W18  W19  W20  W21  W22  W23  W24  W25  W26  W27  W28  W29  W30  W31  W32  W33  W34  W35  W36  W37  W38  W39  W40  W41  W42  W43  W44  W45  W46  W47  W48  W49  W50  W51  W52  W53  W54  W55  W56  W57  W58  W59  W60  W61  W62  W63  W64  W65  W66  W67  W68  W69  W70
-a i j k l n1 any-centroids-moved? update_res_count totalres_patches neigh residential_patchesneeded areaZ1 congestionfactZ1 roads newraster originalcongestionZ1 mylist attractx build-threshold attract z1a z2a z3a z4a z5a z6a z7a z8a z9a z10a z11a z12a z13a z14a ]
+a i j k l n1 any-centroids-moved? l1a l2a l3a l4a l5a l6a l7a l8a l9a l10a l11a l12a lu1a lu2a lu3a lu4a lu5a lu6a lu7a lu8a lu9a lu10a lu11a lu12a update_res_count totalres_patches neigh residential_patchesneeded areaZ1 congestionfactZ1 roads newraster originalcongestionZ1 mylist attractx build-threshold attract z1a z2a z3a z4a z5a z6a z7a z8a z9a z10a z11a z12a z13a z14a ]
 
 breed [ houses house ]
 breed [ agents agent ]
@@ -116,6 +116,24 @@ to landuse
 
                          ]]]]]]]]]]]
 
+
+  set l1a count patches with [ (sixteen_p > 0) and ( twenty_p = 1)]
+  set l2a count patches with [ (sixteen_p > 0) and ( twenty_p = 2)]
+  set l3a count patches with [ (sixteen_p > 0) and ( twenty_p = 3)]
+  set l4a count patches with [ (sixteen_p > 0) and ( twenty_p = 4)]
+  set l5a count patches with [ (sixteen_p > 0) and ( twenty_p = 5)]
+  set l6a count patches with [ (sixteen_p > 0) and ( twenty_p = 6)]
+  set l7a count patches with [ (sixteen_p > 0) and ( twenty_p = 7)]
+  set l8a count patches with [ (sixteen_p > 0) and ( twenty_p = 8)]
+  set l9a count patches with [ (sixteen_p > 0) and ( twenty_p = 9)]
+  set l10a count patches with [ (sixteen_p > 0) and ( twenty_p = 10)]
+  set l11a count patches with [ (sixteen_p > 0) and ( twenty_p = 11)]
+  set l12a count patches with [ (sixteen_p > 0) and ( twenty_p = 12)]
+
+
+ show l1a
+ show l2a
+ show l12a
 
 end
 
@@ -277,6 +295,54 @@ to-report z14r
   report z14a
 end
 
+
+to-report l1r
+  report lu1a
+end
+
+to-report l2r
+  report lu2a
+end
+
+to-report l3r
+  report lu3a
+end
+
+to-report l4r
+  report lu4a
+end
+
+to-report l5r
+  report lu5a
+end
+
+to-report l6r
+  report lu6a
+end
+
+to-report l7r
+  report lu7a
+end
+
+to-report l8r
+  report lu8a
+end
+
+to-report l9r
+  report lu9a
+end
+
+to-report l10r
+  report lu10a
+end
+
+to-report l11r
+  report lu11a
+end
+
+to-report l12r
+  report lu12a
+end
 
 
 to-report yearnumber
@@ -685,7 +751,7 @@ to setup-turtles
     set patience-counter agent-patience         ; The agent-PATIENCE slider controls how long the agents will search for high attraction squares before giving up and settling wherever they happen to be.
     set size 1                                   ; setting agent size to 1 so that it covers whole patch.
   ]
-   ask turtles [ move-to one-of patches with [attraction = 9 ]]  ; asking the population variable to move to the patches with sprawl attraction equal to 9.
+   ask turtles [ move-to one-of patches with [attraction = 5 ]]  ; asking the population variable to move to the patches with sprawl attraction equal to 9.
 end
 
 to go1
@@ -778,6 +844,22 @@ to go1
   set z14a count patches with [ (model2 > 1) and (eleven_p = 14) ]
 
 
+
+  set lu1a (count patches with [ (model2 > 1) and ( twenty_p = 1)])
+  set lu2a (count patches with [ (model2 > 1) and ( twenty_p = 2)])
+  set lu3a (count patches with [ (model2 > 1) and ( twenty_p = 3)])
+  set lu4a (count patches with [ (model2 > 1) and ( twenty_p = 4)])
+  set lu5a (count patches with [ (model2 > 1) and ( twenty_p = 5)])
+  set lu6a (count patches with [ (model2 > 1) and ( twenty_p = 6)])
+  set lu7a (count patches with [ (model2 > 1) and ( twenty_p = 7)])
+  set lu8a (count patches with [ (model2 > 1) and ( twenty_p = 8)])
+  set lu9a (count patches with [ (model2 > 1) and ( twenty_p = 9)])
+  set lu10a (count patches with [ (model2 > 1) and ( twenty_p = 10)])
+  set lu11a (count patches with [ (model2 > 1) and ( twenty_p = 11)])
+  set lu12a (count patches with [ (model2 > 1) and ( twenty_p = 12)])
+
+
+
 ;  if  x > 500
 ;
 ;  [stop]
@@ -825,10 +907,10 @@ to turn-toward-attraction
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-535
-35
-1550
-821
+530
+15
+1545
+801
 100
 75
 5.0
@@ -1391,7 +1473,7 @@ PLOT
 5
 705
 300
-1075
+960
 plot 1
 NIL
 NIL
@@ -1638,7 +1720,7 @@ INPUTBOX
 995
 865
 mdz1
-2
+4
 1
 0
 Number
@@ -1649,7 +1731,7 @@ INPUTBOX
 1050
 865
 mdz2
-1
+1.75
 1
 0
 Number
@@ -1660,7 +1742,7 @@ INPUTBOX
 1105
 865
 mdz3
-3
+2.5
 1
 0
 Number
@@ -1671,7 +1753,7 @@ INPUTBOX
 1160
 865
 mdz4
-4
+1.5
 1
 0
 Number
@@ -1682,7 +1764,7 @@ INPUTBOX
 1215
 865
 mdz5
-2
+4.5
 1
 0
 Number
@@ -1693,7 +1775,7 @@ INPUTBOX
 1270
 865
 mdz6
-1
+3.75
 1
 0
 Number
@@ -1715,7 +1797,7 @@ INPUTBOX
 995
 930
 mdz8
-4
+2.75
 1
 0
 Number
@@ -1726,7 +1808,7 @@ INPUTBOX
 1050
 930
 mdz9
-2
+3
 1
 0
 Number
@@ -1737,7 +1819,7 @@ INPUTBOX
 1105
 930
 mdz10
-1
+3
 1
 0
 Number
@@ -1748,7 +1830,7 @@ INPUTBOX
 1160
 930
 mdz11
-3
+4
 1
 0
 Number
@@ -1759,7 +1841,7 @@ INPUTBOX
 1215
 930
 mdz12
-4
+4.5
 1
 0
 Number
@@ -1770,7 +1852,7 @@ INPUTBOX
 1270
 930
 mdz13
-2
+4.75
 1
 0
 Number
@@ -1781,7 +1863,7 @@ INPUTBOX
 1325
 930
 mdz14
-1
+4.75
 1
 0
 Number
@@ -1809,7 +1891,7 @@ LANDUSE ATTRACTION
 SLIDER
 285
 450
-322
+318
 542
 l1
 l1
@@ -1824,7 +1906,7 @@ VERTICAL
 SLIDER
 325
 450
-362
+358
 542
 l2
 l2
@@ -1839,7 +1921,7 @@ VERTICAL
 SLIDER
 365
 450
-402
+398
 542
 l3
 l3
@@ -1854,7 +1936,7 @@ VERTICAL
 SLIDER
 405
 450
-442
+438
 542
 l4
 l4
@@ -1884,7 +1966,7 @@ VERTICAL
 SLIDER
 485
 450
-522
+518
 542
 l6
 l6
@@ -1914,7 +1996,7 @@ VERTICAL
 SLIDER
 325
 545
-362
+358
 637
 l8
 l8
@@ -1929,7 +2011,7 @@ VERTICAL
 SLIDER
 365
 545
-402
+398
 637
 l9
 l9
@@ -1944,7 +2026,7 @@ VERTICAL
 SLIDER
 405
 545
-442
+438
 637
 l10
 l10
@@ -1959,7 +2041,7 @@ VERTICAL
 SLIDER
 445
 545
-482
+478
 637
 l11
 l11
@@ -1974,7 +2056,7 @@ VERTICAL
 SLIDER
 485
 545
-522
+518
 637
 l12
 l12
@@ -1995,6 +2077,167 @@ l1 : RESIDENTIAL\nl2 : RESIDENTIAL PRP.\nl3 : COMMERCIAL\nl4 : COMMERCIAL PRP.\n
 11
 93.0
 1
+
+MONITOR
+555
+1010
+612
+1055
+NIL
+l1r
+17
+1
+11
+
+MONITOR
+615
+1010
+672
+1055
+NIL
+l2r
+17
+1
+11
+
+MONITOR
+675
+1010
+732
+1055
+NIL
+l3r
+17
+1
+11
+
+MONITOR
+735
+1010
+792
+1055
+NIL
+l4r
+17
+1
+11
+
+MONITOR
+795
+1010
+852
+1055
+NIL
+l5r
+17
+1
+11
+
+MONITOR
+855
+1010
+912
+1055
+NIL
+l6r
+17
+1
+11
+
+MONITOR
+915
+1010
+972
+1055
+NIL
+l7r
+17
+1
+11
+
+MONITOR
+975
+1010
+1032
+1055
+NIL
+l8r
+17
+1
+11
+
+MONITOR
+1035
+1010
+1092
+1055
+NIL
+l9r
+17
+1
+11
+
+MONITOR
+1095
+1010
+1152
+1055
+NIL
+l10r
+17
+1
+11
+
+MONITOR
+1150
+1010
+1207
+1055
+NIL
+l11r
+17
+1
+11
+
+MONITOR
+1215
+1010
+1272
+1055
+NIL
+l12r
+17
+1
+11
+
+PLOT
+5
+970
+300
+1195
+plot 2
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+true
+"" ""
+PENS
+"RESIDENTIAL" 1.0 0 -1184463 true "" "plot l1r"
+"RESIDENTIAL PRP." 1.0 0 -955883 true "" "plot l2r"
+"COMMERCIAL" 1.0 0 -14730904 true "" "plot l3r"
+"COMMERCIAL PRP." 1.0 0 -14070903 true "" "plot l4r"
+"INDUSTRIES" 1.0 0 -5825686 true "" "plot l5r"
+"INDUSTRIES PRP." 1.0 0 -1664597 true "" "plot l6r"
+"PUBLIC SP" 1.0 0 -5298144 true "" "plot l7r"
+"PUBLIC SP PRP." 1.0 0 -2139308 true "" "plot l8r"
+"RECREATION" 1.0 0 -14439633 true "" "plot l9r"
+"RECREATION PRP." 1.0 0 -8330359 true "" "plot l10r"
+"TRANSPORTATION" 1.0 0 -16777216 true "" "plot l11r"
+"AGRICULTURE" 1.0 0 -4399183 true "" "plot l12r"
 
 @#$#@#$#@
 ## WHAT IS IT?
